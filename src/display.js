@@ -19,12 +19,12 @@ export function renderHeader({ title, onMenuToggle }) {
   return header;
 }
 
-export function renderTikkun({ words, index, verified }) {
+export function renderTikkun({ words, index, verified, shemPending }) {
   const wrap = document.createElement("div");
-  wrap.className = "tikkun-wrap";
+  wrap.className = shemPending ? "tikkun-wrap with-shem-panel" : "tikkun-wrap";
 
   const column = document.createElement("div");
-  column.className = "tikkun-column";
+  column.className = shemPending ? "tikkun-column shem-active" : "tikkun-column";
 
   if (!verified) {
     const banner = document.createElement("div");
@@ -38,18 +38,22 @@ export function renderTikkun({ words, index, verified }) {
 
   words.forEach((word, i) => {
     const span = document.createElement("span");
-    span.className = `word ${i < index ? "written" : i === index ? "current" : "upcoming"}`;
+    const isCurrent = i === index;
+    span.className = `word ${i < index ? "written" : isCurrent ? "current" : "upcoming"}${
+      isCurrent && shemPending ? " shem-pending" : ""
+    }`;
     span.textContent = word.text;
     text.appendChild(span);
     if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
   });
 
+  column.appendChild(text);
+
   const footer = document.createElement("div");
   footer.className = "tikkun-footer";
   footer.textContent = `מילה ${index + 1} מתוך ${words.length}`;
-
-  column.appendChild(text);
   column.appendChild(footer);
+
   wrap.appendChild(column);
   return wrap;
 }

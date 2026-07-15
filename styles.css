@@ -178,6 +178,10 @@ body {
   padding: 1.25rem 0.75rem 2rem;
 }
 
+.tikkun-wrap.with-shem-panel {
+  padding-bottom: 10rem;
+}
+
 .tikkun-column {
   width: 100%;
   max-width: 640px;
@@ -235,6 +239,118 @@ body {
   text-align: center;
   padding: 0.4rem;
   direction: rtl;
+}
+
+/* ---------- lishmah gate (session start) ---------- */
+
+.gate-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 2rem 1.25rem;
+  text-align: center;
+  direction: rtl;
+}
+
+.gate-label {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gate-nusach {
+  font-family: var(--stam-font);
+  font-size: 2rem;
+  color: var(--fg);
+  max-width: 26rem;
+}
+
+.gate-note {
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: var(--dim);
+  max-width: 24rem;
+}
+
+/* ---------- shem gate (per-Shem declaration) ---------- */
+
+.tikkun-column.shem-active {
+  border: 3px solid var(--gold);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 16px rgba(201, 162, 39, 0.5);
+}
+
+.tikkun-text .word.shem-pending {
+  background: none;
+  color: var(--gold);
+  box-shadow: 0 0 0 0.15em var(--gold);
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.shem-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 15;
+  background: #141414;
+  border-top: 2px solid var(--gold);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+  padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+}
+
+.shem-nusach {
+  font-size: 1.4rem;
+  color: var(--gold);
+}
+
+.shem-panel .gate-note {
+  color: var(--dim);
+}
+
+/* ---------- long-press confirm button ---------- */
+
+.long-press-btn {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+  background: #1a1a1a;
+  color: var(--gold);
+  font-family: sans-serif;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 0.9rem 2.5rem;
+  border-radius: 2rem;
+  touch-action: none;
+}
+
+.long-press-btn .lp-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  background: var(--gold);
+  z-index: 0;
+}
+
+.long-press-btn.pressing .lp-fill {
+  width: 100%;
+  transition: width 750ms linear;
+}
+
+.long-press-btn .lp-label {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: difference;
 }
 
 /* ---------- done screen ---------- */
