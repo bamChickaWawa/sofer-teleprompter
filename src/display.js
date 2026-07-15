@@ -6,7 +6,7 @@ const VOICE_LABELS = {
   unsupported: "🎤 לא נתמך",
 };
 
-export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice }) {
+export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice, onToggleHalacha }) {
   const header = document.createElement("header");
   header.className = "app-header";
 
@@ -25,6 +25,11 @@ export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice }
     if (onToggleVoice) voiceBtn.addEventListener("click", onToggleVoice);
     controls.appendChild(voiceBtn);
   }
+
+  const halachaBtn = document.createElement("button");
+  halachaBtn.textContent = "📖 הלכה";
+  halachaBtn.addEventListener("click", onToggleHalacha);
+  controls.appendChild(halachaBtn);
 
   const menuBtn = document.createElement("button");
   menuBtn.textContent = "☰ תפריט";

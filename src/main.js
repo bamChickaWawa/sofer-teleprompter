@@ -5,6 +5,7 @@ import { renderDrawer } from "./menu.js";
 import { renderLishmahGate, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
 import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
+import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
 import { loadPosition, savePosition, loadSettings, saveSettings } from "./store.js";
 
 const TEXTS = { mezuzah };
@@ -27,6 +28,9 @@ const app = {
   font: settings.font ?? "ashkenaz",
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
+  halachaOpen: false,
+  halachaExpanded: null,
+  halachaEntryStates: {},
 };
 
 function currentItem() {
@@ -142,6 +146,39 @@ function toggleMenu() {
   render();
 }
 
+function contextHalachaRef() {
+  if (app.state === State.LISHMAH_GATE) return "Keset HaSofer.4";
+  if (app.state === State.READY && isCurrentWordShemPending()) return "Keset HaSofer.10";
+  return null;
+}
+
+function toggleHalacha() {
+  app.halachaOpen = !app.halachaOpen;
+  if (app.halachaOpen && !app.halachaExpanded) {
+    const ctx = contextHalachaRef();
+    if (ctx) openHalachaEntry(ctx);
+  }
+  render();
+}
+
+async function openHalachaEntry(ref) {
+  if (!ref) return;
+  if (app.halachaExpanded === ref) {
+    app.halachaExpanded = null;
+    render();
+    return;
+  }
+  app.halachaExpanded = ref;
+  const existing = app.halachaEntryStates[ref];
+  if (!existing || existing.status === "error") {
+    app.halachaEntryStates[ref] = { status: "loading" };
+    render();
+    const data = await fetchHalachaText(ref);
+    app.halachaEntryStates[ref] = data ? { status: "loaded", data } : { status: "error" };
+  }
+  render();
+}
+
 function render() {
   const root = document.getElementById("app");
   root.innerHTML = "";
@@ -155,6 +192,7 @@ function render() {
       onMenuToggle: toggleMenu,
       voiceStatus: app.voiceEnabled ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
+      onToggleHalacha: toggleHalacha,
     })
   );
 
@@ -166,6 +204,18 @@ function render() {
     if (shemPending) root.appendChild(renderShemGate({ onConfirm: confirmShem }));
   } else if (app.state === State.DONE) {
     root.appendChild(renderDone({ wordCount: text.words.length }));
+  }
+
+  if (app.halachaOpen) {
+    root.appendChild(
+      renderHalachaPanel({
+        contextRef: contextHalachaRef(),
+        expandedRef: app.halachaExpanded,
+        entryStates: app.halachaEntryStates,
+        onToggleEntry: openHalachaEntry,
+        onClose: toggleHalacha,
+      })
+    );
   }
 
   if (app.menuOpen) {

@@ -188,6 +188,82 @@ body {
   color: var(--accent);
 }
 
+/* ---------- halacha panel (מראה מקומות) ---------- */
+
+.halacha-drawer {
+  width: min(92vw, 420px);
+}
+
+.halacha-context-note {
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-top: 0.25rem;
+}
+
+.halacha-entry {
+  margin-bottom: 0.15rem;
+}
+
+.halacha-entry-btn {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.3rem;
+  border-radius: 0.3rem;
+}
+
+.halacha-entry-btn:disabled {
+  color: #444;
+}
+
+.halacha-entry-btn.context-active {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.halacha-entry-btn:not(:disabled):active {
+  background: #262626;
+}
+
+.halacha-content {
+  background: #0d0d0d;
+  border-radius: 0.3rem;
+  padding: 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: #ccc;
+  direction: rtl;
+}
+
+.halacha-he {
+  font-family: var(--stam-font);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+
+.halacha-en {
+  direction: ltr;
+  text-align: left;
+  color: #aaa;
+  line-height: 1.5;
+  margin-bottom: 0.4rem;
+}
+
+.halacha-attribution {
+  direction: ltr;
+  text-align: left;
+  font-size: 0.72rem;
+  color: #666;
+}
+
 /* ---------- tikkun column (writing surface) ---------- */
 
 .tikkun-wrap {

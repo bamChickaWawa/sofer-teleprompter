@@ -1,0 +1,52 @@
+{
+  "_note": "Curated index of topic -> ref only. Summaries here are short category labels (from the project plan), not halachic rulings. Full text is always fetched live from Sefaria, never bundled/edited here.",
+  "sections": [
+    {
+      "title": "כתר הסופר (Keset HaSofer)",
+      "entries": [
+        { "topic": "מי כשר לכתוב ולסחור בסת\"ם", "ref": "כתר הסופר א'", "sefariaRef": "Keset HaSofer.1", "summary": "פרק א׳" },
+        { "topic": "עיבוד הקלף לשמה", "ref": "כתר הסופר ב'", "sefariaRef": "Keset HaSofer.2", "summary": "פרק ב׳" },
+        { "topic": "דיו, שרטוט, קולמוס, יד ימין", "ref": "כתר הסופר ג'", "sefariaRef": "Keset HaSofer.3", "summary": "פרק ג׳" },
+        { "topic": "לשמה; אמירת כל תיבה קודם כתיבתה", "ref": "כתר הסופר ד'", "sefariaRef": "Keset HaSofer.4", "summary": "פרק ד׳ - מקור להתקדמות בקול" },
+        { "topic": "צורת האותיות ותגין", "ref": "כתר הסופר ה'", "sefariaRef": "Keset HaSofer.5", "summary": "פרק ה׳" },
+        { "topic": "תינוק מכיר את האות", "ref": "כתר הסופר ו'", "sefariaRef": "Keset HaSofer.6", "summary": "פרק ו׳" },
+        { "topic": "כתיבה תמה; ריווח", "ref": "כתר הסופר ז'", "sefariaRef": "Keset HaSofer.7", "summary": "פרק ז׳" },
+        { "topic": "חוק תוכות", "ref": "כתר הסופר ח'", "sefariaRef": "Keset HaSofer.8", "summary": "פרק ח׳" },
+        { "topic": "כסדרן (תפילין ומזוזה)", "ref": "כתר הסופר ט'", "sefariaRef": "Keset HaSofer.9", "summary": "פרק ט׳" },
+        { "topic": "קדושת השם", "ref": "כתר הסופר י'", "sefariaRef": "Keset HaSofer.10", "summary": "פרק י׳ - י\"ח סעיפים, מקור לשער השם" },
+        { "topic": "איסור מחיקת השם", "ref": "כתר הסופר י\"א", "sefariaRef": "Keset HaSofer.11", "summary": "פרק י\"א" },
+        { "topic": "תיקון שם פגום או שגוי", "ref": "כתר הסופר י\"ב", "sefariaRef": "Keset HaSofer.12", "summary": "פרק י\"ב" },
+        { "topic": "ספר תורה - עמודים ושורות", "ref": "כתר הסופר י\"ג", "sefariaRef": "Keset HaSofer.13", "summary": "פרק י\"ג" },
+        { "topic": "ספר תורה - רווחים", "ref": "כתר הסופר י\"ד", "sefariaRef": "Keset HaSofer.14", "summary": "פרק י\"ד" },
+        { "topic": "פתוחות, סתומות, נונין הפוכות", "ref": "כתר הסופר ט\"ו", "sefariaRef": "Keset HaSofer.15", "summary": "פרק ט\"ו" },
+        { "topic": "פריסת השירות", "ref": "כתר הסופר ט\"ז", "sefariaRef": "Keset HaSofer.16", "summary": "פרק ט\"ז" },
+        { "topic": "תפירת ספר תורה", "ref": "כתר הסופר י\"ז", "sefariaRef": "Keset HaSofer.17", "summary": "פרק י\"ז" },
+        { "topic": "יריעה קרועה", "ref": "כתר הסופר י\"ח", "sefariaRef": "Keset HaSofer.18", "summary": "פרק י\"ח" },
+        { "topic": "איסור השארת ספר בפסול", "ref": "כתר הסופר י\"ט", "sefariaRef": "Keset HaSofer.19", "summary": "פרק י\"ט" },
+        { "topic": "כתיבת תפילין", "ref": "כתר הסופר כ'", "sefariaRef": "Keset HaSofer.20", "summary": "פרק כ׳" },
+        { "topic": "בתים", "ref": "כתר הסופר כ\"א", "sefariaRef": "Keset HaSofer.21", "summary": "פרק כ\"א" },
+        { "topic": "הכנסת הפרשיות; תפירת הבתים", "ref": "כתר הסופר כ\"ב", "sefariaRef": "Keset HaSofer.22", "summary": "פרק כ\"ב" },
+        { "topic": "רצועות", "ref": "כתר הסופר כ\"ג", "sefariaRef": "Keset HaSofer.23", "summary": "פרק כ\"ג" },
+        { "topic": "בדיקת תפילין; נזק", "ref": "כתר הסופר כ\"ד", "sefariaRef": "Keset HaSofer.24", "summary": "פרק כ\"ד" },
+        { "topic": "רמות קדושה - אין להוריד", "ref": "כתר הסופר כ\"ה", "sefariaRef": "Keset HaSofer.25", "summary": "פרק כ\"ה" },
+        { "topic": "תפילין רבינו תם", "ref": "כתר הסופר כ\"ו", "sefariaRef": "Keset HaSofer.26", "summary": "פרק כ\"ו" },
+        { "topic": "כתיבת מזוזות", "ref": "כתר הסופר כ\"ז", "sefariaRef": "Keset HaSofer.27", "summary": "פרק כ\"ז" },
+        { "topic": "כתיבת ותפירת מגילת אסתר", "ref": "כתר הסופר כ\"ח", "sefariaRef": "Keset HaSofer.28", "summary": "פרק כ\"ח" }
+      ]
+    },
+    {
+      "title": "שולחן ערוך ואחרים",
+      "entries": [
+        { "topic": "כתיבת תפילין - סימן ראשי", "ref": "שו״ע או״ח ל״ב", "sefariaRef": "Shulchan Arukh, Orach Chayim.32", "summary": "או\"ח ל\"ב" },
+        { "topic": "כתיבת תפילין - סימן ראשי (משנה ברורה)", "ref": "משנה ברורה ל״ב", "sefariaRef": "Mishnah Berurah.32", "summary": "מ\"ב על או\"ח ל\"ב" },
+        { "topic": "צורת האותיות אות-אות", "ref": "שו״ע או״ח ל״ו", "sefariaRef": "Shulchan Arukh, Orach Chayim.36", "summary": "או\"ח ל\"ו - דף מעשי לתרגול צורת אותיות" },
+        { "topic": "צורת האותיות אות-אות (משנת סופרים)", "ref": "משנת סופרים", "sefariaRef": null, "summary": "לא נמצא ב-API של ספריא - יש לעיין במהדורה מודפסת" },
+        { "topic": "ספר תורה - כתיבה והעתקה, אמירה קודם כתיבה", "ref": "שו״ע יו״ד ער״ד", "sefariaRef": "Shulchan Arukh, Yoreh Deah.274", "summary": "יו\"ד ער\"ד - העתקה ואמירה" },
+        { "topic": "הלכות ספר תורה (ר״ע-רפ״ד)", "ref": "שו״ע יו״ד ר״ע-רפ״ד", "sefariaRef": "Shulchan Arukh, Yoreh Deah.270", "summary": "יו\"ד ר\"ע - תחילת מקבץ הלכות ספר תורה" },
+        { "topic": "הלכות מזוזה", "ref": "שו״ע יו״ד רפ״ח", "sefariaRef": "Shulchan Arukh, Yoreh Deah.288", "summary": "יו\"ד רפ\"ח" },
+        { "topic": "הלכות תפילין", "ref": "רמב״ם הל' תפילין א:י״ט", "sefariaRef": "Mishneh Torah, Tefillin, Mezuzah and the Torah Scroll.1.19", "summary": "רמב\"ם הל' תפילין ומזוזה וספר תורה א:י\"ט" },
+        { "topic": "מסכת סופרים", "ref": "מסכת סופרים", "sefariaRef": "Tractate Soferim.1", "summary": "פרק א׳" }
+      ]
+    }
+  ]
+}
