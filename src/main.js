@@ -1,6 +1,6 @@
 import { buildMezuzah, buildTefillinRashi, buildTefillinRT } from "./texts/compose.js";
 import { textManifest } from "./texts/manifest.js";
-import { renderHeader, renderTikkun, renderDone } from "./display.js";
+import { renderHeader, renderTikkun, renderDone, renderReview } from "./display.js";
 import { renderDrawer } from "./menu.js";
 import { renderLishmahGate, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
@@ -16,6 +16,7 @@ const State = Object.freeze({
   LISHMAH_GATE: "LISHMAH_GATE",
   READY: "READY",
   DONE: "DONE",
+  REVIEW: "REVIEW",
 });
 
 const settings = loadSettings();
@@ -39,6 +40,7 @@ const app = {
   halachaOpen: false,
   halachaExpanded: null,
   halachaEntryStates: {},
+  reviewReturnState: null,
 };
 
 function currentItem() {
@@ -168,6 +170,19 @@ function toggleMenu() {
   render();
 }
 
+function toggleReviewMode() {
+  if (app.state === State.REVIEW) {
+    app.state = app.reviewReturnState.state;
+    app.index = app.reviewReturnState.index;
+    app.reviewReturnState = null;
+  } else if (app.state === State.READY || app.state === State.DONE) {
+    app.reviewReturnState = { state: app.state, index: app.index };
+    app.state = State.REVIEW;
+  }
+  app.menuOpen = false;
+  render();
+}
+
 function contextHalachaRef() {
   if (app.state === State.LISHMAH_GATE) return "Keset HaSofer.4";
   if (app.state === State.READY && isCurrentWordShemPending()) return "Keset HaSofer.10";
@@ -226,6 +241,8 @@ function render() {
     if (shemPending) root.appendChild(renderShemGate({ onConfirm: confirmShem }));
   } else if (app.state === State.DONE) {
     root.appendChild(renderDone({ wordCount: text.words.length }));
+  } else if (app.state === State.REVIEW) {
+    root.appendChild(renderReview({ words: text.words, index: app.index, onExit: toggleReviewMode }));
   }
 
   if (app.halachaOpen) {
@@ -250,6 +267,8 @@ function render() {
         onSelectText: selectText,
         onSelectFont: selectFont,
         onSelectRTOrder: selectRTOrder,
+        onToggleReview: toggleReviewMode,
+        reviewActive: app.state === State.REVIEW,
         onClose: toggleMenu,
       })
     );

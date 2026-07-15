@@ -80,6 +80,46 @@ export function renderTikkun({ words, index, verified, shemPending }) {
   return wrap;
 }
 
+export function renderReview({ words, index, onExit }) {
+  const wrap = document.createElement("div");
+  wrap.className = "review-mode";
+
+  const banner = document.createElement("div");
+  banner.className = "review-banner";
+  const bannerText = document.createElement("span");
+  bannerText.textContent = "מצב עיון - לא לכתיבה!";
+  const exitBtn = document.createElement("button");
+  exitBtn.textContent = "חזרה לכתיבה";
+  exitBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onExit();
+  });
+  banner.appendChild(bannerText);
+  banner.appendChild(exitBtn);
+  wrap.appendChild(banner);
+
+  const scroll = document.createElement("div");
+  scroll.className = "tikkun-wrap review-tikkun-wrap";
+
+  const column = document.createElement("div");
+  column.className = "tikkun-column review-column";
+
+  const text = document.createElement("div");
+  text.className = "tikkun-text";
+  words.forEach((word, i) => {
+    const span = document.createElement("span");
+    span.className = `word ${i === index ? "review-position" : i < index ? "written" : "upcoming"}`;
+    span.textContent = word.text;
+    text.appendChild(span);
+    if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
+  });
+  column.appendChild(text);
+  scroll.appendChild(column);
+  wrap.appendChild(scroll);
+
+  return wrap;
+}
+
 export function renderDone({ wordCount }) {
   const stage = document.createElement("div");
   stage.className = "stage-done";

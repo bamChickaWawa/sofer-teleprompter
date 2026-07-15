@@ -9,7 +9,18 @@ const RT_OPTIONS = [
   { id: "rt", label: "ר\"ת" },
 ];
 
-export function renderDrawer({ manifest, activeId, activeFont, rtOrder, onSelectText, onSelectFont, onSelectRTOrder, onClose }) {
+export function renderDrawer({
+  manifest,
+  activeId,
+  activeFont,
+  rtOrder,
+  onSelectText,
+  onSelectFont,
+  onSelectRTOrder,
+  onToggleReview,
+  reviewActive,
+  onClose,
+}) {
   const overlay = document.createElement("div");
   overlay.className = "nav-overlay";
   overlay.addEventListener("click", (e) => {
@@ -20,6 +31,12 @@ export function renderDrawer({ manifest, activeId, activeFont, rtOrder, onSelect
   const drawer = document.createElement("div");
   drawer.className = "nav-drawer";
   drawer.addEventListener("click", (e) => e.stopPropagation());
+
+  const reviewBtn = document.createElement("button");
+  reviewBtn.className = `nav-item review-toggle${reviewActive ? " active" : ""}`;
+  reviewBtn.textContent = reviewActive ? "◀ חזרה לכתיבה" : "👁 מצב עיון (לא לכתיבה)";
+  reviewBtn.addEventListener("click", onToggleReview);
+  drawer.appendChild(reviewBtn);
 
   const fontHeading = document.createElement("h2");
   fontHeading.textContent = "גופן";

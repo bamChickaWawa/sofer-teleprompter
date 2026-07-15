@@ -458,6 +458,53 @@ body {
   mix-blend-mode: difference;
 }
 
+/* ---------- review mode (kesidran safety: must be unmistakable) ---------- */
+
+.review-mode {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.review-banner {
+  flex: 0 0 auto;
+  background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 12px, #5c1414 12px, #5c1414 24px);
+  color: #fff;
+  font-family: sans-serif;
+  font-weight: bold;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+  border-bottom: 2px solid #fff;
+}
+
+.review-banner button {
+  background: #fff;
+  color: #7a1f1f;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.review-tikkun-wrap {
+  filter: grayscale(0.6);
+}
+
+.review-column {
+  opacity: 0.85;
+}
+
+.tikkun-text .word.review-position {
+  background: none;
+  box-shadow: 0 0 0 0.15em #a33;
+  border-radius: 2px;
+}
+
 /* ---------- done screen ---------- */
 
 .stage-done {
