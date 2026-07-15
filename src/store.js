@@ -2,7 +2,7 @@ const KEY_POSITION = "sofer-teleprompter:position";
 const KEY_SETTINGS = "sofer-teleprompter:settings";
 
 const DEFAULT_SETTINGS = {
-  font: "stam-ashkenaz",
+  font: "ashkenaz",
 };
 
 export function loadPosition() {

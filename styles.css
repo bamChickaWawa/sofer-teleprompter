@@ -1,8 +1,35 @@
+@font-face {
+  font-family: "Stam Ashkenaz CLM";
+  src: url("/fonts/StamAshkenazCLM.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stam Sefarad CLM";
+  src: url("/fonts/StamSefaradCLM.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --bg: #0a0a0a;
   --fg: #f2f2f2;
   --dim: #5a5a5a;
   --gold: #c9a227;
+  --accent: #c9a227;
+  --klaf-bg: #f4ecd8;
+  --klaf-ink: #1a1a1a;
+  --klaf-border: #8a7a54;
+  --highlight-bg: #f2d477;
+  --header-h: 3.25rem;
+}
+
+html[data-font="ashkenaz"] {
+  --stam-font: "Stam Ashkenaz CLM", "David", "Frank Ruehl", serif;
+}
+html[data-font="sefarad"] {
+  --stam-font: "Stam Sefarad CLM", "David", "Frank Ruehl", serif;
+}
+html[data-font="fallback"] {
   --stam-font: "David", "Frank Ruehl", "Times New Roman", serif;
 }
 
@@ -23,92 +50,201 @@ body {
 }
 
 #app {
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   width: 100vw;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
-.stage {
+/* ---------- header ---------- */
+
+.app-header {
+  height: var(--header-h);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  background: #141414;
+  border-bottom: 1px solid #262626;
+  direction: rtl;
+}
+
+.app-header .title {
+  font-family: var(--stam-font);
+  font-size: 1.3rem;
+  color: var(--fg);
+}
+
+.app-header button {
+  background: none;
+  border: 1px solid #3a3a3a;
+  color: var(--fg);
+  font-size: 1.1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+}
+
+.app-header button:active {
+  background: #262626;
+}
+
+.header-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ---------- nav drawer (sofrus-style menu) ---------- */
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(80vw, 320px);
+  background: #141414;
+  border-left: 1px solid #262626;
+  z-index: 21;
+  overflow-y: auto;
+  direction: rtl;
+  padding: 1rem;
+}
+
+.nav-drawer h2 {
+  font-size: 1rem;
+  color: var(--dim);
+  margin: 1rem 0 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.nav-drawer h2:first-child {
+  margin-top: 0;
+}
+
+.nav-item {
+  display: block;
+  width: 100%;
+  text-align: right;
+  background: none;
+  border: none;
+  color: var(--fg);
+  font-family: var(--stam-font);
+  font-size: 1.15rem;
+  padding: 0.6rem 0.3rem;
+  border-radius: 0.3rem;
+}
+
+.nav-item:active,
+.nav-item.active {
+  background: #262626;
+}
+
+.font-choice-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.font-choice {
+  background: none;
+  border: 1px solid #3a3a3a;
+  color: var(--fg);
+  border-radius: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.font-choice.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- tikkun column (writing surface) ---------- */
+
+.tikkun-wrap {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 0.75rem 2rem;
+}
+
+.tikkun-column {
+  width: 100%;
+  max-width: 640px;
+  background: var(--klaf-bg);
+  color: var(--klaf-ink);
+  border: 1px solid var(--klaf-border);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.5);
+  padding: 1.5rem 1.25rem;
+  direction: rtl;
+}
+
+.tikkun-text {
+  font-family: var(--stam-font);
+  font-size: 1.85rem;
+  line-height: 2.15;
+  text-align: justify;
+  text-align-last: right;
+  word-spacing: 0.15em;
+}
+
+.tikkun-text .word {
+  display: inline;
+}
+
+.tikkun-text .word.written {
+  color: #6b6353;
+}
+
+.tikkun-text .word.current {
+  background: var(--highlight-bg);
+  box-shadow: 0 0 0 0.15em var(--highlight-bg);
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.tikkun-text .word.upcoming {
+  color: var(--klaf-ink);
+}
+
+.tikkun-footer {
+  margin-top: 1rem;
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  color: #7a7256;
+  text-align: center;
+  direction: rtl;
+}
+
+.unverified-banner {
+  background: #3a1f1f;
+  color: #f2b8b8;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.4rem;
+  direction: rtl;
+}
+
+/* ---------- done screen ---------- */
+
+.stage-done {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  width: 100%;
-  padding: 1rem;
-}
-
-.word-row {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 0.6em;
-  width: 100%;
-  font-family: var(--stam-font);
-  direction: rtl;
-}
-
-.word-slot {
-  white-space: nowrap;
-  transition: font-size 0.15s ease, opacity 0.15s ease;
-}
-
-.word-slot-empty {
-  visibility: hidden;
-}
-
-.slot-offset-0 {
-  font-size: 18vw;
-  color: var(--fg);
-  opacity: 1;
-}
-
-.slot-offset--1,
-.slot-offset--2 {
-  color: var(--dim);
-  opacity: 0.55;
-}
-
-.slot-offset--1 {
-  font-size: 8vw;
-}
-
-.slot-offset--2 {
-  font-size: 6vw;
-}
-
-.slot-offset-1,
-.slot-offset-2,
-.slot-offset-3 {
-  color: var(--dim);
-  opacity: 0.75;
-}
-
-.slot-offset-1 {
-  font-size: 9vw;
-}
-
-.slot-offset-2 {
-  font-size: 7vw;
-}
-
-.slot-offset-3 {
-  font-size: 5.5vw;
-}
-
-.counter {
-  font-family: sans-serif;
-  font-size: 1rem;
-  color: var(--dim);
-  direction: rtl;
-}
-
-.stage-done {
   gap: 1rem;
 }
 
@@ -116,4 +252,11 @@ body {
   font-family: var(--stam-font);
   font-size: 12vw;
   color: var(--gold);
+}
+
+.counter {
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: var(--dim);
+  direction: rtl;
 }

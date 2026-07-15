@@ -1,39 +1,62 @@
-const SLOT_OFFSETS = [-2, -1, 0, 1, 2, 3];
+export function renderHeader({ title, onMenuToggle }) {
+  const header = document.createElement("header");
+  header.className = "app-header";
 
-export function renderWords(root, { words, index }) {
-  root.innerHTML = "";
+  const titleEl = document.createElement("div");
+  titleEl.className = "title";
+  titleEl.textContent = title;
 
-  const stage = document.createElement("div");
-  stage.className = "stage";
+  const controls = document.createElement("div");
+  controls.className = "header-controls";
 
-  const row = document.createElement("div");
-  row.className = "word-row";
+  const menuBtn = document.createElement("button");
+  menuBtn.textContent = "☰ תפריט";
+  menuBtn.addEventListener("click", onMenuToggle);
+  controls.appendChild(menuBtn);
 
-  for (const offset of SLOT_OFFSETS) {
-    const wordIndex = index + offset;
-    const slot = document.createElement("span");
-    slot.className = `word-slot slot-offset-${offset}`;
-    if (wordIndex >= 0 && wordIndex < words.length) {
-      slot.textContent = words[wordIndex].text;
-    } else {
-      slot.classList.add("word-slot-empty");
-    }
-    row.appendChild(slot);
-  }
-
-  const counter = document.createElement("div");
-  counter.className = "counter";
-  counter.textContent = `מילה ${index + 1} מתוך ${words.length}`;
-
-  stage.appendChild(row);
-  stage.appendChild(counter);
-  root.appendChild(stage);
+  header.appendChild(titleEl);
+  header.appendChild(controls);
+  return header;
 }
 
-export function renderDone(root, { wordCount }) {
-  root.innerHTML = "";
+export function renderTikkun({ words, index, verified }) {
+  const wrap = document.createElement("div");
+  wrap.className = "tikkun-wrap";
+
+  const column = document.createElement("div");
+  column.className = "tikkun-column";
+
+  if (!verified) {
+    const banner = document.createElement("div");
+    banner.className = "unverified-banner";
+    banner.textContent = "טקסט לא מאומת - יש לבדוק מול תיקון מודפס";
+    column.appendChild(banner);
+  }
+
+  const text = document.createElement("div");
+  text.className = "tikkun-text";
+
+  words.forEach((word, i) => {
+    const span = document.createElement("span");
+    span.className = `word ${i < index ? "written" : i === index ? "current" : "upcoming"}`;
+    span.textContent = word.text;
+    text.appendChild(span);
+    if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
+  });
+
+  const footer = document.createElement("div");
+  footer.className = "tikkun-footer";
+  footer.textContent = `מילה ${index + 1} מתוך ${words.length}`;
+
+  column.appendChild(text);
+  column.appendChild(footer);
+  wrap.appendChild(column);
+  return wrap;
+}
+
+export function renderDone({ wordCount }) {
   const stage = document.createElement("div");
-  stage.className = "stage stage-done";
+  stage.className = "stage-done";
   const msg = document.createElement("div");
   msg.className = "done-message";
   msg.textContent = "הפרשה הושלמה";
@@ -42,5 +65,5 @@ export function renderDone(root, { wordCount }) {
   sub.textContent = `${wordCount} מילים`;
   stage.appendChild(msg);
   stage.appendChild(sub);
-  root.appendChild(stage);
+  return stage;
 }
