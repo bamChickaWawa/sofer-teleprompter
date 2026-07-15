@@ -60,30 +60,38 @@ body {
 /* ---------- header ---------- */
 
 .app-header {
-  height: var(--header-h);
+  min-height: var(--header-h);
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
   background: #141414;
   border-bottom: 1px solid #262626;
   direction: rtl;
+  flex-wrap: wrap;
 }
 
 .app-header .title {
   font-family: var(--stam-font);
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .app-header button {
   background: none;
   border: 1px solid #3a3a3a;
   color: var(--fg);
-  font-size: 1.1rem;
-  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  padding: 0.35rem 0.6rem;
   border-radius: 0.4rem;
+  white-space: nowrap;
 }
 
 .app-header button:active {
@@ -92,7 +100,8 @@ body {
 
 .header-controls {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  flex: 0 0 auto;
 }
 
 .voice-status {
