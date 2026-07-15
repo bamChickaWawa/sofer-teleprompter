@@ -1,0 +1,809 @@
+{
+  "_UNVERIFIED": "Fetched from Sefaria (Miqra according to the Masorah) and mechanically split into words/Shem-flags - NOT hand-verified against a printed tikkun. Do not use for actual writing until 'verified' is flipped to true by the sofer.",
+  "verified": false,
+  "title": "פרשה שניה - והיה כי יביאך",
+  "sefariaRef": "Exodus.13.11-16",
+  "wordCount": 100,
+  "words": [
+    {
+      "text": "והיה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כי",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יבאך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ארץ",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הכנעני",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כאשר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "נשבע",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ולאבתיך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ונתנה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "והעברת",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "פטר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "רחם",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ליהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "וכל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "פטר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "שגר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בהמה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אשר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יהיה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הזכרים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ליהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "וכל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "פטר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "חמר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "תפדה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בשה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ואם",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לא",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "תפדה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "וערפתו",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "וכל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בכור",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אדם",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בבניך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "תפדה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "והיה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כי",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ישאלך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בנך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "מחר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לאמר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "מה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "זאת",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ואמרת",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אליו",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בחזק",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יד",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הוציאנו",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ממצרים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "מבית",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "עבדים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ויהי",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כי",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הקשה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "פרעה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לשלחנו",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ויהרג",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בכור",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בארץ",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "מצרים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "מבכר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אדם",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ועד",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בכור",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בהמה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "על",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כן",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אני",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "זבח",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ליהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "פטר",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "רחם",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הזכרים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "וכל",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בכור",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בני",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "אפדה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "והיה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "לאות",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "על",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ידכה",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ולטוטפת",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בין",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "עיניך",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "כי",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "בחזק",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יד",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "הוציאנו",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "יהוה",
+      "isShem": true,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": false
+    },
+    {
+      "text": "ממצרים",
+      "isShem": false,
+      "specialLetters": [],
+      "tagin": [],
+      "lineBreakAfter": false,
+      "parshiaBreak": true
+    }
+  ]
+}

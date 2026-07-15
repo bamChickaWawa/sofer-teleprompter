@@ -1,4 +1,4 @@
-import mezuzah from "./texts/mezuzah.json";
+import { buildMezuzah, buildTefillinRashi, buildTefillinRT } from "./texts/compose.js";
 import { textManifest } from "./texts/manifest.js";
 import { renderHeader, renderTikkun, renderDone } from "./display.js";
 import { renderDrawer } from "./menu.js";
@@ -8,7 +8,9 @@ import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js"
 import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
 import { loadPosition, savePosition, loadSettings, saveSettings } from "./store.js";
 
-const TEXTS = { mezuzah };
+const TEXTS = {
+  mezuzah: buildMezuzah(),
+};
 
 const State = Object.freeze({
   LISHMAH_GATE: "LISHMAH_GATE",
@@ -18,14 +20,20 @@ const State = Object.freeze({
 
 const settings = loadSettings();
 
+function updateSettings(patch) {
+  Object.assign(settings, patch);
+  saveSettings(settings);
+}
+
 const app = {
   state: State.LISHMAH_GATE,
   lishmahConfirmed: false,
-  textId: "mezuzah-shema",
+  textId: "mezuzah",
   index: 0,
   shemConfirmed: new Set(),
   menuOpen: false,
   font: settings.font ?? "ashkenaz",
+  rtOrder: settings.rtOrder ?? "rashi",
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
   halachaOpen: false,
@@ -38,7 +46,11 @@ function currentItem() {
 }
 
 function currentText() {
-  return TEXTS[currentItem().file];
+  const item = currentItem();
+  if (item.file === "tefillin") {
+    return app.rtOrder === "rt" ? buildTefillinRT() : buildTefillinRashi();
+  }
+  return TEXTS[item.file];
 }
 
 function verifyChecksum(text, textId) {
@@ -116,7 +128,7 @@ const voiceController = createVoiceController({
 function toggleVoice() {
   if (!isSpeechRecognitionSupported()) return;
   app.voiceEnabled = !app.voiceEnabled;
-  saveSettings({ ...settings, voiceEnabled: app.voiceEnabled });
+  updateSettings({ voiceEnabled: app.voiceEnabled });
   if (app.voiceEnabled) {
     voiceController.start();
   } else {
@@ -137,7 +149,17 @@ function selectText(id) {
 function selectFont(font) {
   app.font = font;
   document.documentElement.dataset.font = font;
-  saveSettings({ ...settings, font });
+  updateSettings({ font });
+  render();
+}
+
+function selectRTOrder(order) {
+  app.rtOrder = order;
+  updateSettings({ rtOrder: order });
+  if (currentItem().file === "tefillin") {
+    app.index = 0;
+    app.shemConfirmed = new Set();
+  }
   render();
 }
 
@@ -224,8 +246,10 @@ function render() {
         manifest: textManifest,
         activeId: app.textId,
         activeFont: app.font,
+        rtOrder: app.rtOrder,
         onSelectText: selectText,
         onSelectFont: selectFont,
+        onSelectRTOrder: selectRTOrder,
         onClose: toggleMenu,
       })
     );
@@ -237,7 +261,9 @@ function render() {
 
 function init() {
   document.documentElement.dataset.font = app.font;
-  verifyChecksum(mezuzah, "mezuzah-shema");
+  verifyChecksum(TEXTS.mezuzah, "mezuzah");
+  verifyChecksum(buildTefillinRashi(), "tefillin-rashi");
+  verifyChecksum(buildTefillinRT(), "tefillin-rt");
 
   const saved = loadPosition();
   if (saved.textId === app.textId && saved.wordIndex < currentText().words.length) {
