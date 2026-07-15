@@ -1,0 +1,119 @@
+:root {
+  --bg: #0a0a0a;
+  --fg: #f2f2f2;
+  --dim: #5a5a5a;
+  --gold: #c9a227;
+  --stam-font: "David", "Frank Ruehl", "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#app {
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.word-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.6em;
+  width: 100%;
+  font-family: var(--stam-font);
+  direction: rtl;
+}
+
+.word-slot {
+  white-space: nowrap;
+  transition: font-size 0.15s ease, opacity 0.15s ease;
+}
+
+.word-slot-empty {
+  visibility: hidden;
+}
+
+.slot-offset-0 {
+  font-size: 18vw;
+  color: var(--fg);
+  opacity: 1;
+}
+
+.slot-offset--1,
+.slot-offset--2 {
+  color: var(--dim);
+  opacity: 0.55;
+}
+
+.slot-offset--1 {
+  font-size: 8vw;
+}
+
+.slot-offset--2 {
+  font-size: 6vw;
+}
+
+.slot-offset-1,
+.slot-offset-2,
+.slot-offset-3 {
+  color: var(--dim);
+  opacity: 0.75;
+}
+
+.slot-offset-1 {
+  font-size: 9vw;
+}
+
+.slot-offset-2 {
+  font-size: 7vw;
+}
+
+.slot-offset-3 {
+  font-size: 5.5vw;
+}
+
+.counter {
+  font-family: sans-serif;
+  font-size: 1rem;
+  color: var(--dim);
+  direction: rtl;
+}
+
+.stage-done {
+  gap: 1rem;
+}
+
+.done-message {
+  font-family: var(--stam-font);
+  font-size: 12vw;
+  color: var(--gold);
+}
