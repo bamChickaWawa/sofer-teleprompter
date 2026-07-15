@@ -95,6 +95,26 @@ body {
   gap: 0.5rem;
 }
 
+.voice-status {
+  font-size: 0.85rem !important;
+  white-space: nowrap;
+}
+
+.voice-status-listening {
+  border-color: var(--accent) !important;
+  color: var(--accent);
+}
+
+.voice-status-denied,
+.voice-status-error {
+  border-color: #a33 !important;
+  color: #d97a7a;
+}
+
+.voice-status:disabled {
+  opacity: 0.5;
+}
+
 /* ---------- nav drawer (sofrus-style menu) ---------- */
 
 .nav-overlay {

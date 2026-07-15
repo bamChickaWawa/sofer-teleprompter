@@ -1,4 +1,12 @@
-export function renderHeader({ title, onMenuToggle }) {
+const VOICE_LABELS = {
+  listening: "🎤 מאזין",
+  denied: "🎤 נדחתה הרשאה",
+  error: "🎤 שגיאה",
+  stopped: "🎤 כבוי",
+  unsupported: "🎤 לא נתמך",
+};
+
+export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice }) {
   const header = document.createElement("header");
   header.className = "app-header";
 
@@ -8,6 +16,15 @@ export function renderHeader({ title, onMenuToggle }) {
 
   const controls = document.createElement("div");
   controls.className = "header-controls";
+
+  if (voiceStatus) {
+    const voiceBtn = document.createElement("button");
+    voiceBtn.className = `voice-status voice-status-${voiceStatus}`;
+    voiceBtn.textContent = VOICE_LABELS[voiceStatus] ?? "🎤";
+    voiceBtn.disabled = voiceStatus === "unsupported";
+    if (onToggleVoice) voiceBtn.addEventListener("click", onToggleVoice);
+    controls.appendChild(voiceBtn);
+  }
 
   const menuBtn = document.createElement("button");
   menuBtn.textContent = "☰ תפריט";

@@ -4,6 +4,7 @@ import { renderHeader, renderTikkun, renderDone } from "./display.js";
 import { renderDrawer } from "./menu.js";
 import { renderLishmahGate, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
+import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
 import { loadPosition, savePosition, loadSettings, saveSettings } from "./store.js";
 
 const TEXTS = { mezuzah };
@@ -24,6 +25,8 @@ const app = {
   shemConfirmed: new Set(),
   menuOpen: false,
   font: settings.font ?? "ashkenaz",
+  voiceEnabled: settings.voiceEnabled ?? true,
+  voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
 };
 
 function currentItem() {
@@ -82,6 +85,42 @@ function confirmShem() {
   doAdvance();
 }
 
+function getVoiceTarget() {
+  if (app.state !== State.READY || app.menuOpen) return null;
+  const word = currentText().words[app.index];
+  return { text: word.text, isShem: isCurrentWordShemPending() };
+}
+
+function handleVoiceMatch() {
+  if (app.state !== State.READY || app.menuOpen) return;
+  if (isCurrentWordShemPending()) {
+    confirmShem();
+  } else {
+    doAdvance();
+  }
+}
+
+const voiceController = createVoiceController({
+  getTarget: getVoiceTarget,
+  onMatch: handleVoiceMatch,
+  onStatusChange: (status) => {
+    app.voiceStatus = status;
+    render();
+  },
+});
+
+function toggleVoice() {
+  if (!isSpeechRecognitionSupported()) return;
+  app.voiceEnabled = !app.voiceEnabled;
+  saveSettings({ ...settings, voiceEnabled: app.voiceEnabled });
+  if (app.voiceEnabled) {
+    voiceController.start();
+  } else {
+    voiceController.stop();
+  }
+  render();
+}
+
 function selectText(id) {
   app.textId = id;
   app.index = 0;
@@ -110,7 +149,14 @@ function render() {
   const text = currentText();
   const item = currentItem();
 
-  root.appendChild(renderHeader({ title: item.title, onMenuToggle: toggleMenu }));
+  root.appendChild(
+    renderHeader({
+      title: item.title,
+      onMenuToggle: toggleMenu,
+      voiceStatus: app.voiceEnabled ? app.voiceStatus : "stopped",
+      onToggleVoice: toggleVoice,
+    })
+  );
 
   if (app.state === State.LISHMAH_GATE) {
     root.appendChild(renderLishmahGate({ onConfirm: confirmLishmah }));
@@ -148,6 +194,8 @@ function init() {
     app.index = saved.wordIndex;
   }
   render();
+
+  if (app.voiceEnabled) voiceController.start();
 
   document.addEventListener("click", (e) => {
     if (e.target.closest(".app-header") || e.target.closest(".nav-drawer")) return;

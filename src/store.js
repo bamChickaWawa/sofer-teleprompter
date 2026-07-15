@@ -3,6 +3,7 @@ const KEY_SETTINGS = "sofer-teleprompter:settings";
 
 const DEFAULT_SETTINGS = {
   font: "ashkenaz",
+  voiceEnabled: true,
 };
 
 export function loadPosition() {
