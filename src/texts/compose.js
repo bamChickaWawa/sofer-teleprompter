@@ -27,14 +27,14 @@ function compose(parshiot, title) {
 }
 
 export function buildMezuzah() {
-  return compose([PARSHIYOT.shema, PARSHIYOT.vhayaIm], "מזוזה - שמע והיה אם שמע");
+  return compose([PARSHIYOT.shema, PARSHIYOT.vhayaIm], "Mezuzah");
 }
 
 // Rashi order: Torah reading order (Shemot before Devarim; Shema before V'haya im shamoa).
 export function buildTefillinRashi() {
   return compose(
     [PARSHIYOT.kadesh, PARSHIYOT.vhayaKi, PARSHIYOT.shema, PARSHIYOT.vhayaIm],
-    "תפילין (רש\"י) - קדש, והיה כי יביאך, שמע, והיה אם שמע"
+    "Tefillin (Rashi order)"
   );
 }
 
@@ -44,6 +44,6 @@ export function buildTefillinRashi() {
 export function buildTefillinRT() {
   return compose(
     [PARSHIYOT.kadesh, PARSHIYOT.vhayaKi, PARSHIYOT.vhayaIm, PARSHIYOT.shema],
-    "תפילין (ר\"ת) - קדש, והיה כי יביאך, והיה אם שמע, שמע"
+    "Tefillin (Rabbeinu Tam order)"
   );
 }

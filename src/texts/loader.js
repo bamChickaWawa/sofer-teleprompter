@@ -32,7 +32,7 @@ function adaptCompact(compact) {
   return {
     verified: compact.verified,
     _UNVERIFIED: compact._UNVERIFIED,
-    title: `${compact.seferHe} - ${compact.parshaHe}`,
+    title: `${compact.sefer} — ${compact.parsha}`,
     sefariaRef: compact.sefariaRef,
     wordCount: compact.wordCount,
     words,

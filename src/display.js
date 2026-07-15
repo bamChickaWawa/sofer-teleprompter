@@ -1,9 +1,9 @@
 const VOICE_LABELS = {
-  listening: "🎤 מאזין",
-  denied: "🎤 נדחתה הרשאה",
-  error: "🎤 שגיאה",
-  stopped: "🎤 כבוי",
-  unsupported: "🎤 לא נתמך",
+  listening: "🎤 Listening",
+  denied: "🎤 Denied",
+  error: "🎤 Error",
+  stopped: "🎤 Off",
+  unsupported: "🎤 N/A",
 };
 
 export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice, onToggleHalacha }) {
@@ -27,12 +27,12 @@ export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice, 
   }
 
   const halachaBtn = document.createElement("button");
-  halachaBtn.textContent = "📖 הלכה";
+  halachaBtn.textContent = "📖 Halacha";
   halachaBtn.addEventListener("click", onToggleHalacha);
   controls.appendChild(halachaBtn);
 
   const menuBtn = document.createElement("button");
-  menuBtn.textContent = "☰ תפריט";
+  menuBtn.textContent = "☰ Menu";
   menuBtn.addEventListener("click", onMenuToggle);
   controls.appendChild(menuBtn);
 
@@ -50,8 +50,8 @@ export function wordClass(word, i, index, shemPending) {
 
 export function positionLabel(words, index) {
   const current = words[index];
-  const pasukPart = current?.perek ? ` | פרק ${current.perek} פסוק ${current.pasuk}` : "";
-  return `מילה ${index + 1} מתוך ${words.length}${pasukPart}`;
+  const pasukPart = current?.perek ? ` | ${current.perek}:${current.pasuk}` : "";
+  return `Word ${index + 1} of ${words.length}${pasukPart}`;
 }
 
 export function renderTikkun({ words, index, verified, shemPending }) {
@@ -64,7 +64,7 @@ export function renderTikkun({ words, index, verified, shemPending }) {
   if (!verified) {
     const banner = document.createElement("div");
     banner.className = "unverified-banner";
-    banner.textContent = "טקסט לא מאומת - יש לבדוק מול תיקון מודפס";
+    banner.textContent = "UNVERIFIED TEXT — check against a printed tikkun before writing";
     column.appendChild(banner);
   }
 
@@ -75,7 +75,7 @@ export function renderTikkun({ words, index, verified, shemPending }) {
     const span = document.createElement("span");
     span.className = wordClass(word, i, index, shemPending);
     span.textContent = word.text;
-    if (word.isSafekShem) span.title = "שם מסופק - בדוק לפני כתיבה (כתב הסופר י')";
+    if (word.isSafekShem) span.title = "Possible Divine Name — check before writing (Keset HaSofer 10)";
     text.appendChild(span);
     if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
   });
@@ -94,7 +94,7 @@ export function renderControlBar({ words, index, locked, onBack, onAdvance }) {
 
   const backBtn = document.createElement("button");
   backBtn.className = "ctrl-back";
-  backBtn.textContent = "→ אחורה";
+  backBtn.textContent = "‹ Back";
   backBtn.disabled = index === 0;
   backBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -107,7 +107,7 @@ export function renderControlBar({ words, index, locked, onBack, onAdvance }) {
 
   const nextBtn = document.createElement("button");
   nextBtn.className = "ctrl-next";
-  nextBtn.textContent = locked ? "🔒" : "הבא ←";
+  nextBtn.textContent = locked ? "🔒" : "Next ›";
   nextBtn.disabled = locked;
   nextBtn.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -127,9 +127,9 @@ export function renderReview({ words, index, onExit }) {
   const banner = document.createElement("div");
   banner.className = "review-banner";
   const bannerText = document.createElement("span");
-  bannerText.textContent = "מצב עיון - לא לכתיבה!";
+  bannerText.textContent = "REVIEW MODE — NOT FOR WRITING!";
   const exitBtn = document.createElement("button");
-  exitBtn.textContent = "חזרה לכתיבה";
+  exitBtn.textContent = "Back to writing";
   exitBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     onExit();
@@ -165,7 +165,7 @@ export function renderLoading() {
   stage.className = "stage-done";
   const msg = document.createElement("div");
   msg.className = "counter";
-  msg.textContent = "טוען...";
+  msg.textContent = "Loading…";
   stage.appendChild(msg);
   return stage;
 }
@@ -178,13 +178,13 @@ export function renderDone({ wordCount, onBack }) {
   msg.textContent = "הפרשה הושלמה";
   const sub = document.createElement("div");
   sub.className = "counter";
-  sub.textContent = `${wordCount} מילים`;
+  sub.textContent = `Section complete — ${wordCount} words`;
   stage.appendChild(msg);
   stage.appendChild(sub);
   if (onBack) {
     const backBtn = document.createElement("button");
     backBtn.className = "done-back";
-    backBtn.textContent = "→ חזרה לטקסט";
+    backBtn.textContent = "‹ Back to text";
     backBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       onBack();

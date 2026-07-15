@@ -32,7 +32,7 @@ export function renderLetterCounter({ text, onClose }) {
   panel.addEventListener("click", (e) => e.stopPropagation());
 
   const heading = document.createElement("h2");
-  heading.textContent = "מונה אותיות";
+  heading.textContent = "Letter Counter";
   panel.appendChild(heading);
 
   const subtitle = document.createElement("div");
@@ -61,12 +61,12 @@ export function renderLetterCounter({ text, onClose }) {
 
   const totals = document.createElement("div");
   totals.className = "counter-totals";
-  totals.textContent = `סה"כ: ${total} אותיות, ${text.words.length} מילים`;
+  totals.textContent = `Total: ${total} letters, ${text.words.length} words`;
   panel.appendChild(totals);
 
   const closeBtn = document.createElement("button");
   closeBtn.className = "counter-close";
-  closeBtn.textContent = "סגור";
+  closeBtn.textContent = "Close";
   closeBtn.addEventListener("click", onClose);
   panel.appendChild(closeBtn);
 

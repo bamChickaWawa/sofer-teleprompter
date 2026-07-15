@@ -1,18 +1,18 @@
 const FONT_OPTIONS = [
-  { id: "ashkenaz", label: "אשכנז" },
-  { id: "sefarad", label: "ספרד" },
-  { id: "fallback", label: "רגיל" },
+  { id: "ashkenaz", label: "Ashkenaz" },
+  { id: "sefarad", label: "Sefarad" },
+  { id: "fallback", label: "Plain" },
 ];
 
 const RT_OPTIONS = [
-  { id: "rashi", label: "רש\"י" },
-  { id: "rt", label: "ר\"ת" },
+  { id: "rashi", label: "Rashi" },
+  { id: "rt", label: "Rabbeinu Tam" },
 ];
 
 const SENSITIVITY_OPTIONS = [
-  { id: "strict", label: "מדויק" },
-  { id: "normal", label: "רגיל" },
-  { id: "loose", label: "סלחני" },
+  { id: "strict", label: "Strict" },
+  { id: "normal", label: "Normal" },
+  { id: "loose", label: "Loose" },
 ];
 
 const FONT_SCALE_OPTIONS = [
@@ -57,24 +57,24 @@ export function renderDrawer({
 
   const reviewBtn = document.createElement("button");
   reviewBtn.className = `nav-item review-toggle${reviewActive ? " active" : ""}`;
-  reviewBtn.textContent = reviewActive ? "◀ חזרה לכתיבה" : "👁 מצב עיון (לא לכתיבה)";
+  reviewBtn.textContent = reviewActive ? "‹ Back to writing" : "👁 Review mode (not for writing)";
   reviewBtn.addEventListener("click", onToggleReview);
   drawer.appendChild(reviewBtn);
 
   const layoutBtn = document.createElement("button");
   layoutBtn.className = `nav-item${layoutEditorActive ? " active" : ""}`;
-  layoutBtn.textContent = layoutEditorActive ? "◀ חזרה לכתיבה" : "✂ עורך פריסה (תיוג שורות)";
+  layoutBtn.textContent = layoutEditorActive ? "‹ Back to writing" : "✂ Layout editor (mark lines)";
   layoutBtn.addEventListener("click", onToggleLayoutEditor);
   drawer.appendChild(layoutBtn);
 
   const counterBtn = document.createElement("button");
   counterBtn.className = "nav-item";
-  counterBtn.textContent = "🔢 מונה אותיות";
+  counterBtn.textContent = "🔢 Letter counter";
   counterBtn.addEventListener("click", onToggleLetterCounter);
   drawer.appendChild(counterBtn);
 
   const fontHeading = document.createElement("h2");
-  fontHeading.textContent = "גופן";
+  fontHeading.textContent = "Font";
   drawer.appendChild(fontHeading);
 
   const fontRow = document.createElement("div");
@@ -89,7 +89,7 @@ export function renderDrawer({
   drawer.appendChild(fontRow);
 
   const scaleHeading = document.createElement("h2");
-  scaleHeading.textContent = "גודל כתב";
+  scaleHeading.textContent = "Ktav size";
   drawer.appendChild(scaleHeading);
 
   const scaleRow = document.createElement("div");
@@ -104,7 +104,7 @@ export function renderDrawer({
   drawer.appendChild(scaleRow);
 
   const rtHeading = document.createElement("h2");
-  rtHeading.textContent = "סדר פרשיות בתפילין";
+  rtHeading.textContent = "Tefillin parsha order";
   drawer.appendChild(rtHeading);
 
   const rtRow = document.createElement("div");
@@ -119,7 +119,7 @@ export function renderDrawer({
   drawer.appendChild(rtRow);
 
   const sensitivityHeading = document.createElement("h2");
-  sensitivityHeading.textContent = "רגישות זיהוי קול";
+  sensitivityHeading.textContent = "Voice match sensitivity";
   drawer.appendChild(sensitivityHeading);
 
   const sensitivityRow = document.createElement("div");
@@ -149,20 +149,20 @@ export function renderDrawer({
 
   // Torah: sefer -> parsha, sofrus-style. Appears once the runtime manifest loads.
   const torahHeading = document.createElement("h2");
-  torahHeading.textContent = "תיקון סופרים - תורה";
+  torahHeading.textContent = "Tikkun Soferim — Torah";
   drawer.appendChild(torahHeading);
 
   if (!torahSection) {
     const loading = document.createElement("div");
     loading.className = "nav-loading";
-    loading.textContent = "טוען...";
+    loading.textContent = "Loading…";
     drawer.appendChild(loading);
   } else {
     for (const book of torahSection) {
       const seferBtn = document.createElement("button");
       const isOpen = expandedSefer === book.sefer;
       seferBtn.className = `nav-item sefer-toggle${isOpen ? " open" : ""}`;
-      seferBtn.textContent = `${isOpen ? "▼" : "◀"} ספר ${book.seferHe}`;
+      seferBtn.textContent = `${isOpen ? "▼" : "›"} ${book.sefer} (${book.seferHe})`;
       seferBtn.addEventListener("click", () => onToggleSefer(book.sefer));
       drawer.appendChild(seferBtn);
 
@@ -171,7 +171,7 @@ export function renderDrawer({
           const id = `torah:${p.slug}`;
           const btn = document.createElement("button");
           btn.className = `nav-item nav-subitem${id === activeId ? " active" : ""}`;
-          btn.textContent = `${p.heTitle} (${p.wordCount})`;
+          btn.textContent = `${p.title} — ${p.heTitle}`;
           btn.addEventListener("click", () => onSelectText(id));
           drawer.appendChild(btn);
         }

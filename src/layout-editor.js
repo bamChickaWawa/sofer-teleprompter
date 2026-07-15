@@ -26,14 +26,14 @@ export function renderLayoutEditor({ textId, words, lineBreakIndices, onToggleBr
 
   const lines = computeLines(words, lineBreakIndices);
   const info = document.createElement("span");
-  info.textContent = `עורך פריסה - ${lines.length} שורות עד כה`;
+  info.textContent = `Layout editor — ${lines.length} lines so far`;
   banner.appendChild(info);
 
   const actions = document.createElement("div");
   actions.className = "editor-actions";
 
   const clearBtn = document.createElement("button");
-  clearBtn.textContent = "נקה";
+  clearBtn.textContent = "Clear";
   clearBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     onClear();
@@ -41,7 +41,7 @@ export function renderLayoutEditor({ textId, words, lineBreakIndices, onToggleBr
   actions.appendChild(clearBtn);
 
   const exportBtn = document.createElement("button");
-  exportBtn.textContent = "ייצוא";
+  exportBtn.textContent = "Export";
   exportBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     exportLayout(textId, lines);
@@ -49,7 +49,7 @@ export function renderLayoutEditor({ textId, words, lineBreakIndices, onToggleBr
   actions.appendChild(exportBtn);
 
   const exitBtn = document.createElement("button");
-  exitBtn.textContent = "סיום";
+  exitBtn.textContent = "Done";
   exitBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     onExit();
@@ -61,7 +61,7 @@ export function renderLayoutEditor({ textId, words, lineBreakIndices, onToggleBr
 
   const hint = document.createElement("div");
   hint.className = "editor-hint";
-  hint.textContent = "הקש על המילה האחרונה בכל שורה בתיקון המודפס שלך";
+  hint.textContent = "Tap the last word of each line in your printed tikkun";
   wrap.appendChild(hint);
 
   const scroll = document.createElement("div");

@@ -69,13 +69,13 @@ body {
   padding: 0.5rem 0.75rem;
   background: #141414;
   border-bottom: 1px solid #262626;
-  direction: rtl;
+  direction: ltr;
   flex-wrap: wrap;
 }
 
 .app-header .title {
-  font-family: var(--stam-font);
-  font-size: 1.15rem;
+  font-family: sans-serif;
+  font-size: 1.05rem;
   color: var(--fg);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -143,7 +143,7 @@ body {
   border-left: 1px solid #262626;
   z-index: 21;
   overflow-y: auto;
-  direction: rtl;
+  direction: ltr;
   padding: 1rem;
 }
 
@@ -162,12 +162,12 @@ body {
 .nav-item {
   display: block;
   width: 100%;
-  text-align: right;
+  text-align: left;
   background: none;
   border: none;
   color: var(--fg);
-  font-family: var(--stam-font);
-  font-size: 1.15rem;
+  font-family: sans-serif;
+  font-size: 1rem;
   padding: 0.6rem 0.3rem;
   border-radius: 0.3rem;
 }
@@ -198,8 +198,8 @@ body {
 }
 
 .nav-subitem {
-  padding-right: 1.5rem !important;
-  font-size: 1.05rem !important;
+  padding-left: 1.5rem !important;
+  font-size: 0.95rem !important;
 }
 
 .sefer-toggle {
@@ -233,7 +233,7 @@ body {
 .halacha-entry-btn {
   display: block;
   width: 100%;
-  text-align: right;
+  text-align: left;
   background: none;
   border: none;
   color: var(--fg);
@@ -264,7 +264,7 @@ body {
   font-family: sans-serif;
   font-size: 0.85rem;
   color: #ccc;
-  direction: rtl;
+  direction: ltr;
 }
 
 .halacha-he {
@@ -272,6 +272,8 @@ body {
   font-size: 1.15rem;
   line-height: 1.8;
   margin-bottom: 0.5rem;
+  direction: rtl;
+  text-align: right;
 }
 
 .halacha-en {
@@ -323,7 +325,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  direction: rtl;
+  direction: ltr;
 }
 
 .control-bar button {
@@ -426,7 +428,7 @@ body {
   font-size: 0.85rem;
   color: #7a7256;
   text-align: center;
-  direction: rtl;
+  direction: ltr;
 }
 
 .unverified-banner {
@@ -436,7 +438,7 @@ body {
   font-size: 0.8rem;
   text-align: center;
   padding: 0.4rem;
-  direction: rtl;
+  direction: ltr;
 }
 
 /* ---------- lishmah gate (session start) ---------- */
@@ -466,6 +468,7 @@ body {
   font-size: 2rem;
   color: var(--fg);
   max-width: 26rem;
+  direction: rtl;
 }
 
 .gate-note {
@@ -505,6 +508,7 @@ body {
   align-items: center;
   gap: 0.6rem;
   text-align: center;
+  direction: ltr;
 }
 
 .shem-nusach {
@@ -570,7 +574,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
   border-bottom: 2px solid #fff;
 }
 
@@ -618,7 +622,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
 }
 
 .editor-actions {
@@ -643,7 +647,7 @@ body {
   color: var(--dim);
   text-align: center;
   padding: 0.4rem;
-  direction: rtl;
+  direction: ltr;
 }
 
 .tikkun-text .word.line-break-marker {
@@ -667,7 +671,7 @@ body {
   border: 1px solid #333;
   border-radius: 0.6rem;
   padding: 1rem;
-  direction: rtl;
+  direction: ltr;
   text-align: center;
 }
 
@@ -687,6 +691,7 @@ body {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 0.4rem;
+  direction: rtl;
 }
 
 .counter-cell {
@@ -744,5 +749,5 @@ body {
   font-family: sans-serif;
   font-size: 1rem;
   color: var(--dim);
-  direction: rtl;
+  direction: ltr;
 }

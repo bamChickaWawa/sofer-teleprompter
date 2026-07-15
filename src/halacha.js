@@ -55,15 +55,15 @@ function renderEntryContent(state) {
   box.className = "halacha-content";
 
   if (state.status === "loading") {
-    box.textContent = "טוען...";
+    box.textContent = "Loading…";
     return box;
   }
   if (state.status === "error" || (state.status === "loaded" && !state.data)) {
-    box.textContent = "לא ניתן לטעון כעת (בדוק חיבור לאינטרנט)";
+    box.textContent = "Could not load (check internet connection)";
     return box;
   }
   if (state.status === "unavailable") {
-    box.textContent = "אין מקור זמין דרך ה-API של ספריא";
+    box.textContent = "Not available via the Sefaria API";
     return box;
   }
   if (state.status !== "loaded") return box;
@@ -104,13 +104,13 @@ export function renderHalachaPanel({ contextRef, expandedRef, entryStates, onTog
   drawer.addEventListener("click", (e) => e.stopPropagation());
 
   const heading = document.createElement("h2");
-  heading.textContent = "מראה מקומות";
+  heading.textContent = "Sources — מראה מקומות";
   drawer.appendChild(heading);
 
   if (contextRef) {
     const contextNote = document.createElement("div");
     contextNote.className = "halacha-context-note";
-    contextNote.textContent = "רלוונטי כעת:";
+    contextNote.textContent = "Relevant now:";
     drawer.appendChild(contextNote);
   }
 

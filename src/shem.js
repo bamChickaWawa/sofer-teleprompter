@@ -52,13 +52,13 @@ export function renderLishmahPanel({ kind, onConfirm }) {
 
   const label = document.createElement("div");
   label.className = "gate-label";
-  label.textContent = "לפני תחילת הכתיבה - יש להצהיר בפה (כתב הסופר ד')";
+  label.textContent = "Before writing — declare aloud (Keset HaSofer 4):";
 
   const nusach = document.createElement("div");
   nusach.className = "gate-nusach shem-nusach";
   nusach.textContent = lishmahNusach(kind);
 
-  const btn = createLongPressButton({ label: "הצהרתי", onConfirm });
+  const btn = createLongPressButton({ label: "Hold: I have declared", onConfirm });
 
   wrap.appendChild(label);
   wrap.appendChild(nusach);
@@ -76,9 +76,10 @@ export function renderShemGate({ onConfirm }) {
 
   const note = document.createElement("div");
   note.className = "gate-note";
-  note.textContent = "כל שם קדוש טעון קידוש משלו (כתב הסופר י' א') - הצהרה חדשה, לא די בכוונת התחלת הכתיבה";
+  note.textContent =
+    "Divine Name ahead — every Shem needs its own sanctification (Keset HaSofer 10:1); the session declaration is not enough. Say aloud:";
 
-  const btn = createLongPressButton({ label: "אמרתי", onConfirm });
+  const btn = createLongPressButton({ label: "Hold: I have said it", onConfirm });
 
   wrap.appendChild(nusach);
   wrap.appendChild(note);

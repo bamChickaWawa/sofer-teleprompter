@@ -2,11 +2,11 @@
 // public/texts/torah/torah-manifest.json (see loader.js).
 export const textManifest = [
   {
-    category: "מזוזה",
-    items: [{ id: "mezuzah", title: "מזוזה - שמע והיה אם שמע", kind: "mezuzah" }],
+    category: "Mezuzah",
+    items: [{ id: "mezuzah", title: "Mezuzah — Shema + Vehaya Im Shamoa", kind: "mezuzah" }],
   },
   {
-    category: "תפילין",
-    items: [{ id: "tefillin", title: "תפילין - ד' פרשיות", kind: "tefillin" }],
+    category: "Tefillin",
+    items: [{ id: "tefillin", title: "Tefillin — 4 Parshiyot", kind: "tefillin" }],
   },
 ];

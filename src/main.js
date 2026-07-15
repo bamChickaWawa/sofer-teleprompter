@@ -381,7 +381,7 @@ function render() {
 
   root.appendChild(
     renderHeader({
-      title: app.text?.title ?? "טוען...",
+      title: app.text?.title ?? "Loading…",
       onMenuToggle: toggleMenu,
       voiceStatus: app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
