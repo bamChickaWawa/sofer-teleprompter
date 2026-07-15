@@ -43,29 +43,27 @@ function createLongPressButton({ label, onConfirm }) {
   return btn;
 }
 
-export function renderLishmahGate({ kind, onConfirm }) {
-  const stage = document.createElement("div");
-  stage.className = "gate-stage";
+// Bottom panel, not a full-screen block: the text stays visible and
+// scrollable for reference, but advancing is locked until the declaration
+// is confirmed (KhS 4:1 gates the WRITING, not the reading).
+export function renderLishmahPanel({ kind, onConfirm }) {
+  const wrap = document.createElement("div");
+  wrap.className = "shem-panel lishmah-panel";
 
   const label = document.createElement("div");
   label.className = "gate-label";
-  label.textContent = "לפני תחילת הכתיבה";
+  label.textContent = "לפני תחילת הכתיבה - יש להצהיר בפה (כתב הסופר ד')";
 
   const nusach = document.createElement("div");
-  nusach.className = "gate-nusach";
+  nusach.className = "gate-nusach shem-nusach";
   nusach.textContent = lishmahNusach(kind);
-
-  const note = document.createElement("div");
-  note.className = "gate-note";
-  note.textContent = "יש להצהיר בפה לפני תחילת הכתיבה (כתב הסופר ד')";
 
   const btn = createLongPressButton({ label: "הצהרתי", onConfirm });
 
-  stage.appendChild(label);
-  stage.appendChild(nusach);
-  stage.appendChild(note);
-  stage.appendChild(btn);
-  return stage;
+  wrap.appendChild(label);
+  wrap.appendChild(nusach);
+  wrap.appendChild(btn);
+  return wrap;
 }
 
 export function renderShemGate({ onConfirm }) {

@@ -1,9 +1,18 @@
 import { textManifest } from "./texts/manifest.js";
 import { loadText, loadTorahManifest } from "./texts/loader.js";
-import { renderHeader, renderTikkun, renderDone, renderReview, renderLoading } from "./display.js";
+import {
+  renderHeader,
+  renderTikkun,
+  renderControlBar,
+  renderDone,
+  renderReview,
+  renderLoading,
+  wordClass,
+  positionLabel,
+} from "./display.js";
 import { renderDrawer } from "./menu.js";
 import { renderLayoutEditor } from "./layout-editor.js";
-import { renderLishmahGate, renderShemGate } from "./shem.js";
+import { renderLishmahPanel, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
 import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
 import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
@@ -12,7 +21,6 @@ import { loadPosition, savePosition, loadLastTextId, loadSettings, saveSettings 
 
 const State = Object.freeze({
   LOADING: "LOADING",
-  LISHMAH_GATE: "LISHMAH_GATE",
   READY: "READY",
   DONE: "DONE",
   REVIEW: "REVIEW",
@@ -28,20 +36,24 @@ function updateSettings(patch) {
 
 const app = {
   state: State.LOADING,
-  lishmahConfirmed: false,
+  // KhS 4:1 - the declaration names what is being written, so confirming for
+  // a mezuzah does not cover tefillin or a sefer. Per-kind, session only.
+  lishmahByKind: { mezuzah: false, tefillin: false, torah: false },
   textId: "mezuzah",
   textKind: "mezuzah",
   text: null,
   index: 0,
   shemConfirmed: new Set(),
   menuOpen: false,
-  torahSection: null, // populated from torah-manifest.json
+  torahSection: null,
   expandedSefer: null,
   font: settings.font ?? "ashkenaz",
+  fontScale: settings.fontScale ?? 1,
   rtOrder: settings.rtOrder ?? "rashi",
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceSensitivity: settings.voiceSensitivity ?? "normal",
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
+  voiceStarted: false,
   halachaOpen: false,
   halachaExpanded: null,
   halachaEntryStates: {},
@@ -54,6 +66,10 @@ const app = {
 function kindOf(textId) {
   if (textId.startsWith("torah:")) return "torah";
   return textId; // "mezuzah" | "tefillin"
+}
+
+function lishmahPending() {
+  return !app.lishmahByKind[app.textKind];
 }
 
 function verifyChecksum(text, textId) {
@@ -89,18 +105,63 @@ async function switchToText(id) {
     app.layoutBreaks = new Set();
     const saved = loadPosition(id);
     app.index = saved < text.words.length ? saved : 0;
-    app.state = app.lishmahConfirmed ? State.READY : State.LISHMAH_GATE;
+    app.state = State.READY;
   } catch (err) {
     console.error("[loader] failed to load text:", err);
-    app.state = State.READY;
     if (!app.text) {
-      // nothing loaded at all - retry the default rather than render nothing
       app.text = await loadText("mezuzah", {});
       app.textId = "mezuzah";
       app.textKind = "mezuzah";
+      app.index = 0;
     }
+    app.state = State.READY;
   }
   render();
+  scrollCurrentIntoView("auto");
+}
+
+// ---------- advancing (incremental DOM updates - no full rebuild) ----------
+
+function scrollCurrentIntoView(behavior = "smooth") {
+  const current = document.querySelector(".word.current");
+  if (!current) return;
+  const rect = current.getBoundingClientRect();
+  const topBand = window.innerHeight * 0.2;
+  const bottomBand = window.innerHeight * 0.65; // above the control bar
+  if (rect.top < topBand || rect.bottom > bottomBand) {
+    current.scrollIntoView({ block: "center", behavior });
+  }
+}
+
+function applyIndexChange(prevIndex) {
+  const spans = document.querySelectorAll(".tikkun-text .word");
+  const words = app.text.words;
+  if (!spans.length) {
+    render();
+    return;
+  }
+  spans[prevIndex].className = wordClass(words[prevIndex], prevIndex, app.index, false);
+  spans[app.index].className = wordClass(words[app.index], app.index, app.index, false);
+  const position = document.querySelector(".ctrl-position");
+  if (position) position.textContent = positionLabel(words, app.index);
+  const backBtn = document.querySelector(".ctrl-back");
+  if (backBtn) backBtn.disabled = app.index === 0;
+  scrollCurrentIntoView();
+}
+
+function moveTo(newIndex) {
+  const prev = app.index;
+  const wasShem = isCurrentWordShemPending();
+  app.index = newIndex;
+  savePosition(app.textId, app.index);
+  const isShemNow = isCurrentWordShemPending();
+  if (wasShem || isShemNow) {
+    // entering/leaving a Shem word changes the bottom panel - full render
+    render();
+    scrollCurrentIntoView();
+  } else {
+    applyIndexChange(prev);
+  }
 }
 
 function doAdvance() {
@@ -109,37 +170,54 @@ function doAdvance() {
     render();
     return;
   }
-  app.index += 1;
-  savePosition(app.textId, app.index);
-  render();
+  moveTo(app.index + 1);
+}
+
+function goBack() {
+  if (app.index === 0) return;
+  moveTo(app.index - 1);
 }
 
 function advance() {
   if (app.state !== State.READY || app.menuOpen || app.halachaOpen || app.counterOpen) return;
+  if (lishmahPending()) return;
   if (isCurrentWordShemPending()) return;
   doAdvance();
 }
 
 function confirmLishmah() {
-  app.lishmahConfirmed = true;
-  app.state = State.READY;
+  app.lishmahByKind[app.textKind] = true;
+  // First user-blessed moment to ask for the mic - never at page load.
+  if (app.voiceEnabled && !app.voiceStarted && isSpeechRecognitionSupported()) {
+    app.voiceStarted = true;
+    voiceController.start();
+  }
   render();
+  scrollCurrentIntoView("auto");
 }
 
 function confirmShem() {
   app.shemConfirmed.add(app.index);
   doAdvance();
+  // the shem panel must always swap back to the control bar, even when
+  // moveTo took the incremental path
+  if (app.state === State.READY) {
+    render();
+    scrollCurrentIntoView();
+  }
 }
 
+// ---------- voice ----------
+
 function getVoiceTarget() {
-  if (app.state !== State.READY || app.menuOpen) return null;
+  if (app.state !== State.READY || app.menuOpen || lishmahPending()) return null;
   const word = app.text?.words[app.index];
   if (!word) return null;
   return { text: word.text, isShem: isCurrentWordShemPending() };
 }
 
 function handleVoiceMatch() {
-  if (app.state !== State.READY || app.menuOpen) return;
+  if (app.state !== State.READY || app.menuOpen || lishmahPending()) return;
   if (isCurrentWordShemPending()) {
     confirmShem();
   } else {
@@ -152,6 +230,7 @@ const voiceController = createVoiceController({
   getSensitivity: () => app.voiceSensitivity,
   onMatch: handleVoiceMatch,
   onStatusChange: (status) => {
+    if (status === app.voiceStatus) return;
     app.voiceStatus = status;
     render();
   },
@@ -159,15 +238,19 @@ const voiceController = createVoiceController({
 
 function toggleVoice() {
   if (!isSpeechRecognitionSupported()) return;
-  app.voiceEnabled = !app.voiceEnabled;
-  updateSettings({ voiceEnabled: app.voiceEnabled });
-  if (app.voiceEnabled) {
+  const nowOn = !(app.voiceStarted && app.voiceEnabled);
+  app.voiceEnabled = nowOn;
+  updateSettings({ voiceEnabled: nowOn });
+  if (nowOn) {
+    app.voiceStarted = true;
     voiceController.start();
   } else {
     voiceController.stop();
   }
   render();
 }
+
+// ---------- settings ----------
 
 function selectVoiceSensitivity(sensitivity) {
   app.voiceSensitivity = sensitivity;
@@ -182,6 +265,13 @@ function selectFont(font) {
   render();
 }
 
+function selectFontScale(scale) {
+  app.fontScale = scale;
+  document.documentElement.style.setProperty("--font-scale", scale);
+  updateSettings({ fontScale: scale });
+  render();
+}
+
 function selectRTOrder(order) {
   app.rtOrder = order;
   updateSettings({ rtOrder: order });
@@ -191,6 +281,8 @@ function selectRTOrder(order) {
   }
   render();
 }
+
+// ---------- panels/modes ----------
 
 function toggleMenu() {
   app.menuOpen = !app.menuOpen;
@@ -249,7 +341,7 @@ function toggleLetterCounter() {
 }
 
 function contextHalachaRef() {
-  if (app.state === State.LISHMAH_GATE) return "Keset HaSofer.4";
+  if (app.state === State.READY && lishmahPending()) return "Keset HaSofer.4";
   if (app.state === State.READY && isCurrentWordShemPending()) return "Keset HaSofer.10";
   return null;
 }
@@ -281,6 +373,8 @@ async function openHalachaEntry(ref) {
   render();
 }
 
+// ---------- render ----------
+
 function render() {
   const root = document.getElementById("app");
   root.innerHTML = "";
@@ -289,7 +383,7 @@ function render() {
     renderHeader({
       title: app.text?.title ?? "טוען...",
       onMenuToggle: toggleMenu,
-      voiceStatus: app.voiceEnabled ? app.voiceStatus : "stopped",
+      voiceStatus: app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
       onToggleHalacha: toggleHalacha,
     })
@@ -297,16 +391,37 @@ function render() {
 
   if (app.state === State.LOADING) {
     root.appendChild(renderLoading());
-  } else if (app.state === State.LISHMAH_GATE) {
-    root.appendChild(renderLishmahGate({ kind: app.textKind, onConfirm: confirmLishmah }));
   } else if (app.state === State.READY) {
-    const shemPending = isCurrentWordShemPending();
+    const shemPending = !lishmahPending() && isCurrentWordShemPending();
     root.appendChild(
       renderTikkun({ words: app.text.words, index: app.index, verified: app.text.verified, shemPending })
     );
-    if (shemPending) root.appendChild(renderShemGate({ onConfirm: confirmShem }));
+    if (lishmahPending()) {
+      root.appendChild(renderLishmahPanel({ kind: app.textKind, onConfirm: confirmLishmah }));
+    } else if (shemPending) {
+      root.appendChild(renderShemGate({ onConfirm: confirmShem }));
+    } else {
+      root.appendChild(
+        renderControlBar({
+          words: app.text.words,
+          index: app.index,
+          locked: false,
+          onBack: goBack,
+          onAdvance: advance,
+        })
+      );
+    }
   } else if (app.state === State.DONE) {
-    root.appendChild(renderDone({ wordCount: app.text.words.length }));
+    root.appendChild(
+      renderDone({
+        wordCount: app.text.words.length,
+        onBack: () => {
+          app.state = State.READY;
+          render();
+          scrollCurrentIntoView("auto");
+        },
+      })
+    );
   } else if (app.state === State.REVIEW) {
     root.appendChild(renderReview({ words: app.text.words, index: app.index, onExit: toggleReviewMode }));
   } else if (app.state === State.LAYOUT_EDITOR) {
@@ -347,10 +462,12 @@ function render() {
         onToggleSefer: toggleSefer,
         activeId: app.textId,
         activeFont: app.font,
+        fontScale: app.fontScale,
         rtOrder: app.rtOrder,
         voiceSensitivity: app.voiceSensitivity,
         onSelectText: switchToText,
         onSelectFont: selectFont,
+        onSelectFontScale: selectFontScale,
         onSelectRTOrder: selectRTOrder,
         onSelectVoiceSensitivity: selectVoiceSensitivity,
         onToggleReview: toggleReviewMode,
@@ -362,17 +479,13 @@ function render() {
       })
     );
   }
-
-  const current = root.querySelector(".word.current");
-  if (current) current.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
 async function init() {
   document.documentElement.dataset.font = app.font;
+  document.documentElement.style.setProperty("--font-scale", app.fontScale);
   render();
 
-  // Torah nav loads in parallel with the initial text; menu just shows the
-  // static sections until it lands.
   loadTorahManifest()
     .then((manifest) => {
       app.torahSection = manifest;
@@ -383,16 +496,16 @@ async function init() {
   const last = loadLastTextId();
   await switchToText(last && (last === "tefillin" || last === "mezuzah" || last.startsWith("torah:")) ? last : "mezuzah");
 
-  if (app.voiceEnabled) voiceController.start();
+  // NOTE: voice deliberately does NOT start here - no mic permission prompt
+  // at page load. It starts on lishmah confirm or the header toggle.
 
-  document.addEventListener("click", (e) => {
-    if (e.target.closest(".app-header") || e.target.closest(".nav-drawer")) return;
-    advance();
-  });
   document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
       e.preventDefault();
       advance();
+    } else if (e.code === "ArrowRight") {
+      // RTL: right arrow = back
+      if (app.state === State.READY && !app.menuOpen && !lishmahPending()) goBack();
     }
   });
 }

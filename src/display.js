@@ -41,9 +41,22 @@ export function renderHeader({ title, onMenuToggle, voiceStatus, onToggleVoice, 
   return header;
 }
 
+export function wordClass(word, i, index, shemPending) {
+  const isCurrent = i === index;
+  return `word ${i < index ? "written" : isCurrent ? "current" : "upcoming"}${
+    isCurrent && shemPending ? " shem-pending" : ""
+  }${word.isSafekShem ? " safek-shem" : ""}`;
+}
+
+export function positionLabel(words, index) {
+  const current = words[index];
+  const pasukPart = current?.perek ? ` | פרק ${current.perek} פסוק ${current.pasuk}` : "";
+  return `מילה ${index + 1} מתוך ${words.length}${pasukPart}`;
+}
+
 export function renderTikkun({ words, index, verified, shemPending }) {
   const wrap = document.createElement("div");
-  wrap.className = shemPending ? "tikkun-wrap with-shem-panel" : "tikkun-wrap";
+  wrap.className = "tikkun-wrap with-bottom-bar";
 
   const column = document.createElement("div");
   column.className = shemPending ? "tikkun-column shem-active" : "tikkun-column";
@@ -60,10 +73,7 @@ export function renderTikkun({ words, index, verified, shemPending }) {
 
   words.forEach((word, i) => {
     const span = document.createElement("span");
-    const isCurrent = i === index;
-    span.className = `word ${i < index ? "written" : isCurrent ? "current" : "upcoming"}${
-      isCurrent && shemPending ? " shem-pending" : ""
-    }${word.isSafekShem ? " safek-shem" : ""}`;
+    span.className = wordClass(word, i, index, shemPending);
     span.textContent = word.text;
     if (word.isSafekShem) span.title = "שם מסופק - בדוק לפני כתיבה (כתב הסופר י')";
     text.appendChild(span);
@@ -71,16 +81,43 @@ export function renderTikkun({ words, index, verified, shemPending }) {
   });
 
   column.appendChild(text);
-
-  const footer = document.createElement("div");
-  footer.className = "tikkun-footer";
-  const current = words[index];
-  const pasukPart = current?.perek ? ` | פרק ${current.perek} פסוק ${current.pasuk}` : "";
-  footer.textContent = `מילה ${index + 1} מתוך ${words.length}${pasukPart}`;
-  column.appendChild(footer);
-
   wrap.appendChild(column);
   return wrap;
+}
+
+// Fixed bottom bar in writing mode: explicit back/advance controls instead
+// of tap-anywhere (stray taps were silently advancing the text), plus the
+// live position readout.
+export function renderControlBar({ words, index, locked, onBack, onAdvance }) {
+  const bar = document.createElement("div");
+  bar.className = "control-bar";
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "ctrl-back";
+  backBtn.textContent = "→ אחורה";
+  backBtn.disabled = index === 0;
+  backBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onBack();
+  });
+
+  const position = document.createElement("div");
+  position.className = "ctrl-position tikkun-footer";
+  position.textContent = positionLabel(words, index);
+
+  const nextBtn = document.createElement("button");
+  nextBtn.className = "ctrl-next";
+  nextBtn.textContent = locked ? "🔒" : "הבא ←";
+  nextBtn.disabled = locked;
+  nextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    onAdvance();
+  });
+
+  bar.appendChild(backBtn);
+  bar.appendChild(position);
+  bar.appendChild(nextBtn);
+  return bar;
 }
 
 export function renderReview({ words, index, onExit }) {
@@ -133,7 +170,7 @@ export function renderLoading() {
   return stage;
 }
 
-export function renderDone({ wordCount }) {
+export function renderDone({ wordCount, onBack }) {
   const stage = document.createElement("div");
   stage.className = "stage-done";
   const msg = document.createElement("div");
@@ -144,5 +181,15 @@ export function renderDone({ wordCount }) {
   sub.textContent = `${wordCount} מילים`;
   stage.appendChild(msg);
   stage.appendChild(sub);
+  if (onBack) {
+    const backBtn = document.createElement("button");
+    backBtn.className = "done-back";
+    backBtn.textContent = "→ חזרה לטקסט";
+    backBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      onBack();
+    });
+    stage.appendChild(backBtn);
+  }
   return stage;
 }

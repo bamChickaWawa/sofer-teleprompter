@@ -95,7 +95,15 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
     recognition.onresult = handleResult;
     recognition.onerror = (e) => {
       console.warn("[voice] recognition error:", e.error);
-      setStatus(e.error === "not-allowed" ? "denied" : "error");
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+        // Permission denied: stop for good instead of hammering restart -
+        // onend fires after this and must not re-arm the recognizer.
+        active = false;
+        clearTimeout(restartTimer);
+        setStatus("denied");
+        return;
+      }
+      setStatus(e.error === "no-speech" ? "listening" : "error");
     };
     recognition.onend = () => {
       if (!active) return;

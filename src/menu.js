@@ -15,6 +15,13 @@ const SENSITIVITY_OPTIONS = [
   { id: "loose", label: "סלחני" },
 ];
 
+const FONT_SCALE_OPTIONS = [
+  { id: 0.8, label: "א" },
+  { id: 1, label: "א+" },
+  { id: 1.3, label: "א++" },
+  { id: 1.6, label: "א+++" },
+];
+
 export function renderDrawer({
   manifest,
   torahSection,
@@ -22,10 +29,12 @@ export function renderDrawer({
   onToggleSefer,
   activeId,
   activeFont,
+  fontScale,
   rtOrder,
   voiceSensitivity,
   onSelectText,
   onSelectFont,
+  onSelectFontScale,
   onSelectRTOrder,
   onSelectVoiceSensitivity,
   onToggleReview,
@@ -78,6 +87,21 @@ export function renderDrawer({
     fontRow.appendChild(btn);
   }
   drawer.appendChild(fontRow);
+
+  const scaleHeading = document.createElement("h2");
+  scaleHeading.textContent = "גודל כתב";
+  drawer.appendChild(scaleHeading);
+
+  const scaleRow = document.createElement("div");
+  scaleRow.className = "font-choice-row";
+  for (const opt of FONT_SCALE_OPTIONS) {
+    const btn = document.createElement("button");
+    btn.className = `font-choice${opt.id === fontScale ? " active" : ""}`;
+    btn.textContent = opt.label;
+    btn.addEventListener("click", () => onSelectFontScale(opt.id));
+    scaleRow.appendChild(btn);
+  }
+  drawer.appendChild(scaleRow);
 
   const rtHeading = document.createElement("h2");
   rtHeading.textContent = "סדר פרשיות בתפילין";
