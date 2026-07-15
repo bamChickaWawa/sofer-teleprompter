@@ -9,14 +9,22 @@ const RT_OPTIONS = [
   { id: "rt", label: "ר\"ת" },
 ];
 
+const SENSITIVITY_OPTIONS = [
+  { id: "strict", label: "מדויק" },
+  { id: "normal", label: "רגיל" },
+  { id: "loose", label: "סלחני" },
+];
+
 export function renderDrawer({
   manifest,
   activeId,
   activeFont,
   rtOrder,
+  voiceSensitivity,
   onSelectText,
   onSelectFont,
   onSelectRTOrder,
+  onSelectVoiceSensitivity,
   onToggleReview,
   reviewActive,
   onClose,
@@ -67,6 +75,21 @@ export function renderDrawer({
     rtRow.appendChild(btn);
   }
   drawer.appendChild(rtRow);
+
+  const sensitivityHeading = document.createElement("h2");
+  sensitivityHeading.textContent = "רגישות זיהוי קול";
+  drawer.appendChild(sensitivityHeading);
+
+  const sensitivityRow = document.createElement("div");
+  sensitivityRow.className = "font-choice-row";
+  for (const opt of SENSITIVITY_OPTIONS) {
+    const btn = document.createElement("button");
+    btn.className = `font-choice${opt.id === voiceSensitivity ? " active" : ""}`;
+    btn.textContent = opt.label;
+    btn.addEventListener("click", () => onSelectVoiceSensitivity(opt.id));
+    sensitivityRow.appendChild(btn);
+  }
+  drawer.appendChild(sensitivityRow);
 
   for (const group of manifest) {
     const heading = document.createElement("h2");

@@ -28,14 +28,18 @@ function levenshtein(a, b) {
   return dp[a.length][b.length];
 }
 
+// Divisor: lower = more forgiving (bigger allowed edit distance).
+export const SENSITIVITY_DIVISORS = { loose: 2, normal: 3, strict: 4 };
+
 // Forgiving on purpose: tap/spacebar is always the halachically-fine
 // fallback, so voice only needs to be generously right, not exact.
-export function fuzzyMatchesWord(spoken, expected) {
+export function fuzzyMatchesWord(spoken, expected, sensitivity = "normal") {
   const a = normalizeHebrew(spoken);
   const b = normalizeHebrew(expected);
   if (!a || !b) return false;
   if (a === b) return true;
-  const threshold = Math.max(1, Math.ceil(Math.max(a.length, b.length) / 3));
+  const divisor = SENSITIVITY_DIVISORS[sensitivity] ?? SENSITIVITY_DIVISORS.normal;
+  const threshold = Math.max(1, Math.ceil(Math.max(a.length, b.length) / divisor));
   return levenshtein(a, b) <= threshold;
 }
 
@@ -55,8 +59,9 @@ export function isSpeechRecognitionSupported() {
 }
 
 // getTarget(): () => { text, isShem } | null  -- null means "not listening for anything right now"
+// getSensitivity(): () => "loose" | "normal" | "strict"
 // onMatch(): called when the spoken word matches the current target
-export function createVoiceController({ getTarget, onMatch, onStatusChange }) {
+export function createVoiceController({ getTarget, getSensitivity, onMatch, onStatusChange }) {
   let recognition = null;
   let active = false;
   let restartTimer = null;
@@ -72,8 +77,9 @@ export function createVoiceController({ getTarget, onMatch, onStatusChange }) {
       const target = getTarget();
       if (!target) continue;
       const tokens = result[0].transcript.trim().split(/\s+/).filter(Boolean);
+      const sensitivity = getSensitivity ? getSensitivity() : "normal";
       const matched = tokens.some((tok) =>
-        target.isShem ? matchesKinui(tok) : fuzzyMatchesWord(tok, target.text)
+        target.isShem ? matchesKinui(tok) : fuzzyMatchesWord(tok, target.text, sensitivity)
       );
       if (matched) onMatch();
     }

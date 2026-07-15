@@ -36,6 +36,7 @@ const app = {
   font: settings.font ?? "ashkenaz",
   rtOrder: settings.rtOrder ?? "rashi",
   voiceEnabled: settings.voiceEnabled ?? true,
+  voiceSensitivity: settings.voiceSensitivity ?? "normal",
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
   halachaOpen: false,
   halachaExpanded: null,
@@ -120,6 +121,7 @@ function handleVoiceMatch() {
 
 const voiceController = createVoiceController({
   getTarget: getVoiceTarget,
+  getSensitivity: () => app.voiceSensitivity,
   onMatch: handleVoiceMatch,
   onStatusChange: (status) => {
     app.voiceStatus = status;
@@ -136,6 +138,12 @@ function toggleVoice() {
   } else {
     voiceController.stop();
   }
+  render();
+}
+
+function selectVoiceSensitivity(sensitivity) {
+  app.voiceSensitivity = sensitivity;
+  updateSettings({ voiceSensitivity: sensitivity });
   render();
 }
 
@@ -264,9 +272,11 @@ function render() {
         activeId: app.textId,
         activeFont: app.font,
         rtOrder: app.rtOrder,
+        voiceSensitivity: app.voiceSensitivity,
         onSelectText: selectText,
         onSelectFont: selectFont,
         onSelectRTOrder: selectRTOrder,
+        onSelectVoiceSensitivity: selectVoiceSensitivity,
         onToggleReview: toggleReviewMode,
         reviewActive: app.state === State.REVIEW,
         onClose: toggleMenu,
