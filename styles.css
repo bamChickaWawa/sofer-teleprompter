@@ -197,6 +197,22 @@ body {
   color: var(--accent);
 }
 
+.nav-subitem {
+  padding-right: 1.5rem !important;
+  font-size: 1.05rem !important;
+}
+
+.sefer-toggle {
+  color: var(--accent) !important;
+}
+
+.nav-loading {
+  color: var(--dim);
+  font-family: sans-serif;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.3rem;
+}
+
 /* ---------- halacha panel (מראה מקומות) ---------- */
 
 .halacha-drawer {
@@ -325,6 +341,11 @@ body {
 
 .tikkun-text .word.upcoming {
   color: var(--klaf-ink);
+}
+
+/* שמות מסופקין: flag for attention, never gate - the app must not rule */
+.tikkun-text .word.safek-shem {
+  border-bottom: 2px dotted #b8860b;
 }
 
 .tikkun-footer {
@@ -557,6 +578,77 @@ body {
   border-left: 3px solid var(--accent);
   padding-left: 0.2em;
   margin-left: 0.1em;
+}
+
+/* ---------- letter counter panel ---------- */
+
+.counter-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  width: min(92vw, 420px);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #141414;
+  border: 1px solid #333;
+  border-radius: 0.6rem;
+  padding: 1rem;
+  direction: rtl;
+  text-align: center;
+}
+
+.counter-panel h2 {
+  font-size: 1.1rem;
+  color: var(--fg);
+  margin: 0 0 0.25rem;
+}
+
+.counter-subtitle {
+  font-family: var(--stam-font);
+  color: var(--dim);
+  margin-bottom: 0.75rem;
+}
+
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.counter-cell {
+  background: #1d1d1d;
+  border-radius: 0.3rem;
+  padding: 0.35rem 0;
+}
+
+.counter-letter {
+  font-family: var(--stam-font);
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.counter-count {
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  color: var(--fg);
+}
+
+.counter-totals {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  color: var(--dim);
+  margin: 0.75rem 0;
+}
+
+.counter-close {
+  background: none;
+  border: 1px solid #3a3a3a;
+  color: var(--fg);
+  border-radius: 0.4rem;
+  padding: 0.4rem 1.5rem;
+  font-family: sans-serif;
 }
 
 /* ---------- done screen ---------- */

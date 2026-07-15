@@ -1,0 +1,410 @@
+[
+  {
+    "sefer": "Genesis",
+    "seferHe": "בראשית",
+    "parshiyot": [
+      {
+        "slug": "bereshit",
+        "title": "Bereshit",
+        "heTitle": "בראשית",
+        "ref": "Genesis 1:1-6:8",
+        "wordCount": 1931
+      },
+      {
+        "slug": "noach",
+        "title": "Noach",
+        "heTitle": "נח",
+        "ref": "Genesis 6:9-11:32",
+        "wordCount": 1861
+      },
+      {
+        "slug": "lech-lecha",
+        "title": "Lech Lecha",
+        "heTitle": "לך לך",
+        "ref": "Genesis 12:1-17:27",
+        "wordCount": 1686
+      },
+      {
+        "slug": "vayera",
+        "title": "Vayera",
+        "heTitle": "וירא",
+        "ref": "Genesis 18:1-22:24",
+        "wordCount": 2085
+      },
+      {
+        "slug": "chayei-sara",
+        "title": "Chayei Sara",
+        "heTitle": "חיי שרה",
+        "ref": "Genesis 23:1-25:18",
+        "wordCount": 1402
+      },
+      {
+        "slug": "toldot",
+        "title": "Toldot",
+        "heTitle": "תולדות",
+        "ref": "Genesis 25:19-28:9",
+        "wordCount": 1432
+      },
+      {
+        "slug": "vayetzei",
+        "title": "Vayetzei",
+        "heTitle": "ויצא",
+        "ref": "Genesis 28:10-32:3",
+        "wordCount": 2021
+      },
+      {
+        "slug": "vayishlach",
+        "title": "Vayishlach",
+        "heTitle": "וישלח",
+        "ref": "Genesis 32:4-36:43",
+        "wordCount": 1976
+      },
+      {
+        "slug": "vayeshev",
+        "title": "Vayeshev",
+        "heTitle": "וישב",
+        "ref": "Genesis 37:1-40:23",
+        "wordCount": 1558
+      },
+      {
+        "slug": "miketz",
+        "title": "Miketz",
+        "heTitle": "מקץ",
+        "ref": "Genesis 41:1-44:17",
+        "wordCount": 2022
+      },
+      {
+        "slug": "vayigash",
+        "title": "Vayigash",
+        "heTitle": "ויגש",
+        "ref": "Genesis 44:18-47:27",
+        "wordCount": 1480
+      },
+      {
+        "slug": "vayechi",
+        "title": "Vayechi",
+        "heTitle": "ויחי",
+        "ref": "Genesis 47:28-50:26",
+        "wordCount": 1158
+      }
+    ]
+  },
+  {
+    "sefer": "Exodus",
+    "seferHe": "שמות",
+    "parshiyot": [
+      {
+        "slug": "shemot",
+        "title": "Shemot",
+        "heTitle": "שמות",
+        "ref": "Exodus 1:1-6:1",
+        "wordCount": 1763
+      },
+      {
+        "slug": "vaera",
+        "title": "Vaera",
+        "heTitle": "וארא",
+        "ref": "Exodus 6:2-9:35",
+        "wordCount": 1748
+      },
+      {
+        "slug": "bo",
+        "title": "Bo",
+        "heTitle": "בא",
+        "ref": "Exodus 10:1-13:16",
+        "wordCount": 1655
+      },
+      {
+        "slug": "beshalach",
+        "title": "Beshalach",
+        "heTitle": "בשלח",
+        "ref": "Exodus 13:17-17:16",
+        "wordCount": 1681
+      },
+      {
+        "slug": "yitro",
+        "title": "Yitro",
+        "heTitle": "יתרו",
+        "ref": "Exodus 18:1-20:23",
+        "wordCount": 1105
+      },
+      {
+        "slug": "mishpatim",
+        "title": "Mishpatim",
+        "heTitle": "משפטים",
+        "ref": "Exodus 21:1-24:18",
+        "wordCount": 1462
+      },
+      {
+        "slug": "terumah",
+        "title": "Terumah",
+        "heTitle": "תרומה",
+        "ref": "Exodus 25:1-27:19",
+        "wordCount": 1145
+      },
+      {
+        "slug": "tetzaveh",
+        "title": "Tetzaveh",
+        "heTitle": "תצוה",
+        "ref": "Exodus 27:20-30:10",
+        "wordCount": 1412
+      },
+      {
+        "slug": "ki-tisa",
+        "title": "Ki Tisa",
+        "heTitle": "כי תשא",
+        "ref": "Exodus 30:11-34:35",
+        "wordCount": 2002
+      },
+      {
+        "slug": "vayakhel",
+        "title": "Vayakhel",
+        "heTitle": "ויקהל",
+        "ref": "Exodus 35:1-38:20",
+        "wordCount": 1558
+      },
+      {
+        "slug": "pekudei",
+        "title": "Pekudei",
+        "heTitle": "פקודי",
+        "ref": "Exodus 38:21-40:38",
+        "wordCount": 1182
+      }
+    ]
+  },
+  {
+    "sefer": "Leviticus",
+    "seferHe": "ויקרא",
+    "parshiyot": [
+      {
+        "slug": "vayikra",
+        "title": "Vayikra",
+        "heTitle": "ויקרא",
+        "ref": "Leviticus 1:1-5:26",
+        "wordCount": 1673
+      },
+      {
+        "slug": "tzav",
+        "title": "Tzav",
+        "heTitle": "צו",
+        "ref": "Leviticus 6:1-8:36",
+        "wordCount": 1353
+      },
+      {
+        "slug": "shmini",
+        "title": "Shmini",
+        "heTitle": "שמיני",
+        "ref": "Leviticus 9:1-11:47",
+        "wordCount": 1238
+      },
+      {
+        "slug": "tazria",
+        "title": "Tazria",
+        "heTitle": "תזריע",
+        "ref": "Leviticus 12:1-13:59",
+        "wordCount": 1010
+      },
+      {
+        "slug": "metzora",
+        "title": "Metzora",
+        "heTitle": "מצורע",
+        "ref": "Leviticus 14:1-15:33",
+        "wordCount": 1274
+      },
+      {
+        "slug": "achrei-mot",
+        "title": "Achrei Mot",
+        "heTitle": "אחרי מות",
+        "ref": "Leviticus 16:1-18:30",
+        "wordCount": 1170
+      },
+      {
+        "slug": "kedoshim",
+        "title": "Kedoshim",
+        "heTitle": "קדושים",
+        "ref": "Leviticus 19:1-20:27",
+        "wordCount": 868
+      },
+      {
+        "slug": "emor",
+        "title": "Emor",
+        "heTitle": "אמור",
+        "ref": "Leviticus 21:1-24:23",
+        "wordCount": 1614
+      },
+      {
+        "slug": "behar",
+        "title": "Behar",
+        "heTitle": "בהר",
+        "ref": "Leviticus 25:1-26:2",
+        "wordCount": 737
+      },
+      {
+        "slug": "bechukotai",
+        "title": "Bechukotai",
+        "heTitle": "בחוקתי",
+        "ref": "Leviticus 26:3-27:34",
+        "wordCount": 1013
+      }
+    ]
+  },
+  {
+    "sefer": "Numbers",
+    "seferHe": "במדבר",
+    "parshiyot": [
+      {
+        "slug": "bamidbar",
+        "title": "Bamidbar",
+        "heTitle": "במדבר",
+        "ref": "Numbers 1:1-4:20",
+        "wordCount": 1823
+      },
+      {
+        "slug": "nasso",
+        "title": "Nasso",
+        "heTitle": "נשא",
+        "ref": "Numbers 4:21-7:89",
+        "wordCount": 2264
+      },
+      {
+        "slug": "beha-alotcha",
+        "title": "Beha'alotcha",
+        "heTitle": "בהעלותך",
+        "ref": "Numbers 8:1-12:16",
+        "wordCount": 1840
+      },
+      {
+        "slug": "sh-lach",
+        "title": "Sh'lach",
+        "heTitle": "שלח",
+        "ref": "Numbers 13:1-15:41",
+        "wordCount": 1540
+      },
+      {
+        "slug": "korach",
+        "title": "Korach",
+        "heTitle": "קרח",
+        "ref": "Numbers 16:1-18:32",
+        "wordCount": 1409
+      },
+      {
+        "slug": "chukat",
+        "title": "Chukat",
+        "heTitle": "חקת",
+        "ref": "Numbers 19:1-22:1",
+        "wordCount": 1245
+      },
+      {
+        "slug": "balak",
+        "title": "Balak",
+        "heTitle": "בלק",
+        "ref": "Numbers 22:2-25:9",
+        "wordCount": 1455
+      },
+      {
+        "slug": "pinchas",
+        "title": "Pinchas",
+        "heTitle": "פנחס",
+        "ref": "Numbers 25:10-30:1",
+        "wordCount": 1887
+      },
+      {
+        "slug": "matot",
+        "title": "Matot",
+        "heTitle": "מטות",
+        "ref": "Numbers 30:2-32:42",
+        "wordCount": 1484
+      },
+      {
+        "slug": "masei",
+        "title": "Masei",
+        "heTitle": "מסעי",
+        "ref": "Numbers 33:1-36:13",
+        "wordCount": 1461
+      }
+    ]
+  },
+  {
+    "sefer": "Deuteronomy",
+    "seferHe": "דברים",
+    "parshiyot": [
+      {
+        "slug": "devarim",
+        "title": "Devarim",
+        "heTitle": "דברים",
+        "ref": "Deuteronomy 1:1-3:22",
+        "wordCount": 1548
+      },
+      {
+        "slug": "vaetchanan",
+        "title": "Vaetchanan",
+        "heTitle": "ואתחנן",
+        "ref": "Deuteronomy 3:23-7:11",
+        "wordCount": 1878
+      },
+      {
+        "slug": "eikev",
+        "title": "Eikev",
+        "heTitle": "עקב",
+        "ref": "Deuteronomy 7:12-11:25",
+        "wordCount": 1747
+      },
+      {
+        "slug": "re-eh",
+        "title": "Re'eh",
+        "heTitle": "ראה",
+        "ref": "Deuteronomy 11:26-16:17",
+        "wordCount": 1932
+      },
+      {
+        "slug": "shoftim",
+        "title": "Shoftim",
+        "heTitle": "שופטים",
+        "ref": "Deuteronomy 16:18-21:9",
+        "wordCount": 1523
+      },
+      {
+        "slug": "ki-teitzei",
+        "title": "Ki Teitzei",
+        "heTitle": "כי תצא",
+        "ref": "Deuteronomy 21:10-25:19",
+        "wordCount": 1582
+      },
+      {
+        "slug": "ki-tavo",
+        "title": "Ki Tavo",
+        "heTitle": "כי תבוא",
+        "ref": "Deuteronomy 26:1-29:8",
+        "wordCount": 1747
+      },
+      {
+        "slug": "nitzavim",
+        "title": "Nitzavim",
+        "heTitle": "נצבים",
+        "ref": "Deuteronomy 29:9-30:20",
+        "wordCount": 657
+      },
+      {
+        "slug": "vayeilech",
+        "title": "Vayeilech",
+        "heTitle": "וילך",
+        "ref": "Deuteronomy 31:1-30",
+        "wordCount": 553
+      },
+      {
+        "slug": "ha-azinu",
+        "title": "Ha'Azinu",
+        "heTitle": "האזינו",
+        "ref": "Deuteronomy 32:1-52",
+        "wordCount": 615
+      },
+      {
+        "slug": "v-zot-haberachah",
+        "title": "V'Zot HaBerachah",
+        "heTitle": "וזאת הברכה",
+        "ref": "Deuteronomy 33:1-34:12",
+        "wordCount": 512
+      }
+    ]
+  }
+]

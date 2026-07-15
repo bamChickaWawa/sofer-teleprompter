@@ -63,8 +63,9 @@ export function renderTikkun({ words, index, verified, shemPending }) {
     const isCurrent = i === index;
     span.className = `word ${i < index ? "written" : isCurrent ? "current" : "upcoming"}${
       isCurrent && shemPending ? " shem-pending" : ""
-    }`;
+    }${word.isSafekShem ? " safek-shem" : ""}`;
     span.textContent = word.text;
+    if (word.isSafekShem) span.title = "שם מסופק - בדוק לפני כתיבה (כתב הסופר י')";
     text.appendChild(span);
     if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
   });
@@ -73,7 +74,9 @@ export function renderTikkun({ words, index, verified, shemPending }) {
 
   const footer = document.createElement("div");
   footer.className = "tikkun-footer";
-  footer.textContent = `מילה ${index + 1} מתוך ${words.length}`;
+  const current = words[index];
+  const pasukPart = current?.perek ? ` | פרק ${current.perek} פסוק ${current.pasuk}` : "";
+  footer.textContent = `מילה ${index + 1} מתוך ${words.length}${pasukPart}`;
   column.appendChild(footer);
 
   wrap.appendChild(column);
@@ -118,6 +121,16 @@ export function renderReview({ words, index, onExit }) {
   wrap.appendChild(scroll);
 
   return wrap;
+}
+
+export function renderLoading() {
+  const stage = document.createElement("div");
+  stage.className = "stage-done";
+  const msg = document.createElement("div");
+  msg.className = "counter";
+  msg.textContent = "טוען...";
+  stage.appendChild(msg);
+  return stage;
 }
 
 export function renderDone({ wordCount }) {

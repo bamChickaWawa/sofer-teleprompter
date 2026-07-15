@@ -17,6 +17,9 @@ const SENSITIVITY_OPTIONS = [
 
 export function renderDrawer({
   manifest,
+  torahSection,
+  expandedSefer,
+  onToggleSefer,
   activeId,
   activeFont,
   rtOrder,
@@ -29,6 +32,7 @@ export function renderDrawer({
   reviewActive,
   onToggleLayoutEditor,
   layoutEditorActive,
+  onToggleLetterCounter,
   onClose,
 }) {
   const overlay = document.createElement("div");
@@ -53,6 +57,12 @@ export function renderDrawer({
   layoutBtn.textContent = layoutEditorActive ? "◀ חזרה לכתיבה" : "✂ עורך פריסה (תיוג שורות)";
   layoutBtn.addEventListener("click", onToggleLayoutEditor);
   drawer.appendChild(layoutBtn);
+
+  const counterBtn = document.createElement("button");
+  counterBtn.className = "nav-item";
+  counterBtn.textContent = "🔢 מונה אותיות";
+  counterBtn.addEventListener("click", onToggleLetterCounter);
+  drawer.appendChild(counterBtn);
 
   const fontHeading = document.createElement("h2");
   fontHeading.textContent = "גופן";
@@ -110,6 +120,38 @@ export function renderDrawer({
       btn.textContent = item.title;
       btn.addEventListener("click", () => onSelectText(item.id));
       drawer.appendChild(btn);
+    }
+  }
+
+  // Torah: sefer -> parsha, sofrus-style. Appears once the runtime manifest loads.
+  const torahHeading = document.createElement("h2");
+  torahHeading.textContent = "תיקון סופרים - תורה";
+  drawer.appendChild(torahHeading);
+
+  if (!torahSection) {
+    const loading = document.createElement("div");
+    loading.className = "nav-loading";
+    loading.textContent = "טוען...";
+    drawer.appendChild(loading);
+  } else {
+    for (const book of torahSection) {
+      const seferBtn = document.createElement("button");
+      const isOpen = expandedSefer === book.sefer;
+      seferBtn.className = `nav-item sefer-toggle${isOpen ? " open" : ""}`;
+      seferBtn.textContent = `${isOpen ? "▼" : "◀"} ספר ${book.seferHe}`;
+      seferBtn.addEventListener("click", () => onToggleSefer(book.sefer));
+      drawer.appendChild(seferBtn);
+
+      if (isOpen) {
+        for (const p of book.parshiyot) {
+          const id = `torah:${p.slug}`;
+          const btn = document.createElement("button");
+          btn.className = `nav-item nav-subitem${id === activeId ? " active" : ""}`;
+          btn.textContent = `${p.heTitle} (${p.wordCount})`;
+          btn.addEventListener("click", () => onSelectText(id));
+          drawer.appendChild(btn);
+        }
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import { LISHMAH_NUSACH, SHEM_NUSACH } from "./declarations.js";
+import { lishmahNusach, SHEM_NUSACH } from "./declarations.js";
 
 const LONG_PRESS_MS = 750;
 
@@ -43,7 +43,7 @@ function createLongPressButton({ label, onConfirm }) {
   return btn;
 }
 
-export function renderLishmahGate({ onConfirm }) {
+export function renderLishmahGate({ kind, onConfirm }) {
   const stage = document.createElement("div");
   stage.className = "gate-stage";
 
@@ -53,7 +53,7 @@ export function renderLishmahGate({ onConfirm }) {
 
   const nusach = document.createElement("div");
   nusach.className = "gate-nusach";
-  nusach.textContent = LISHMAH_NUSACH;
+  nusach.textContent = lishmahNusach(kind);
 
   const note = document.createElement("div");
   note.className = "gate-note";

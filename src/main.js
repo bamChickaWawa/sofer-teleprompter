@@ -1,19 +1,17 @@
-import { buildMezuzah, buildTefillinRashi, buildTefillinRT } from "./texts/compose.js";
 import { textManifest } from "./texts/manifest.js";
-import { renderHeader, renderTikkun, renderDone, renderReview } from "./display.js";
+import { loadText, loadTorahManifest } from "./texts/loader.js";
+import { renderHeader, renderTikkun, renderDone, renderReview, renderLoading } from "./display.js";
 import { renderDrawer } from "./menu.js";
 import { renderLayoutEditor } from "./layout-editor.js";
 import { renderLishmahGate, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
 import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
 import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
-import { loadPosition, savePosition, loadSettings, saveSettings } from "./store.js";
-
-const TEXTS = {
-  mezuzah: buildMezuzah(),
-};
+import { renderLetterCounter } from "./letter-counter.js";
+import { loadPosition, savePosition, loadLastTextId, loadSettings, saveSettings } from "./store.js";
 
 const State = Object.freeze({
+  LOADING: "LOADING",
   LISHMAH_GATE: "LISHMAH_GATE",
   READY: "READY",
   DONE: "DONE",
@@ -29,12 +27,16 @@ function updateSettings(patch) {
 }
 
 const app = {
-  state: State.LISHMAH_GATE,
+  state: State.LOADING,
   lishmahConfirmed: false,
   textId: "mezuzah",
+  textKind: "mezuzah",
+  text: null,
   index: 0,
   shemConfirmed: new Set(),
   menuOpen: false,
+  torahSection: null, // populated from torah-manifest.json
+  expandedSefer: null,
   font: settings.font ?? "ashkenaz",
   rtOrder: settings.rtOrder ?? "rashi",
   voiceEnabled: settings.voiceEnabled ?? true,
@@ -43,21 +45,15 @@ const app = {
   halachaOpen: false,
   halachaExpanded: null,
   halachaEntryStates: {},
+  counterOpen: false,
   reviewReturnState: null,
   layoutReturnState: null,
   layoutBreaks: new Set(),
 };
 
-function currentItem() {
-  return textManifest.flatMap((g) => g.items).find((i) => i.id === app.textId);
-}
-
-function currentText() {
-  const item = currentItem();
-  if (item.file === "tefillin") {
-    return app.rtOrder === "rt" ? buildTefillinRT() : buildTefillinRashi();
-  }
-  return TEXTS[item.file];
+function kindOf(textId) {
+  if (textId.startsWith("torah:")) return "torah";
+  return textId; // "mezuzah" | "tefillin"
 }
 
 function verifyChecksum(text, textId) {
@@ -75,13 +71,40 @@ function verifyChecksum(text, textId) {
 }
 
 function isCurrentWordShemPending() {
-  const word = currentText().words[app.index];
+  const word = app.text?.words[app.index];
   return isShemWord(word) && !app.shemConfirmed.has(app.index);
 }
 
+async function switchToText(id) {
+  app.state = State.LOADING;
+  app.menuOpen = false;
+  render();
+  try {
+    const text = await loadText(id, { rtOrder: app.rtOrder });
+    app.textId = id;
+    app.textKind = kindOf(id);
+    app.text = text;
+    verifyChecksum(text, id);
+    app.shemConfirmed = new Set();
+    app.layoutBreaks = new Set();
+    const saved = loadPosition(id);
+    app.index = saved < text.words.length ? saved : 0;
+    app.state = app.lishmahConfirmed ? State.READY : State.LISHMAH_GATE;
+  } catch (err) {
+    console.error("[loader] failed to load text:", err);
+    app.state = State.READY;
+    if (!app.text) {
+      // nothing loaded at all - retry the default rather than render nothing
+      app.text = await loadText("mezuzah", {});
+      app.textId = "mezuzah";
+      app.textKind = "mezuzah";
+    }
+  }
+  render();
+}
+
 function doAdvance() {
-  const text = currentText();
-  if (app.index >= text.words.length - 1) {
+  if (app.index >= app.text.words.length - 1) {
     app.state = State.DONE;
     render();
     return;
@@ -92,7 +115,7 @@ function doAdvance() {
 }
 
 function advance() {
-  if (app.state !== State.READY || app.menuOpen) return;
+  if (app.state !== State.READY || app.menuOpen || app.halachaOpen || app.counterOpen) return;
   if (isCurrentWordShemPending()) return;
   doAdvance();
 }
@@ -110,7 +133,8 @@ function confirmShem() {
 
 function getVoiceTarget() {
   if (app.state !== State.READY || app.menuOpen) return null;
-  const word = currentText().words[app.index];
+  const word = app.text?.words[app.index];
+  if (!word) return null;
   return { text: word.text, isShem: isCurrentWordShemPending() };
 }
 
@@ -151,16 +175,6 @@ function selectVoiceSensitivity(sensitivity) {
   render();
 }
 
-function selectText(id) {
-  app.textId = id;
-  app.index = 0;
-  app.shemConfirmed = new Set();
-  app.layoutBreaks = new Set();
-  app.state = app.lishmahConfirmed ? State.READY : State.LISHMAH_GATE;
-  app.menuOpen = false;
-  render();
-}
-
 function selectFont(font) {
   app.font = font;
   document.documentElement.dataset.font = font;
@@ -171,15 +185,20 @@ function selectFont(font) {
 function selectRTOrder(order) {
   app.rtOrder = order;
   updateSettings({ rtOrder: order });
-  if (currentItem().file === "tefillin") {
-    app.index = 0;
-    app.shemConfirmed = new Set();
+  if (app.textId === "tefillin") {
+    switchToText("tefillin");
+    return;
   }
   render();
 }
 
 function toggleMenu() {
   app.menuOpen = !app.menuOpen;
+  render();
+}
+
+function toggleSefer(sefer) {
+  app.expandedSefer = app.expandedSefer === sefer ? null : sefer;
   render();
 }
 
@@ -223,6 +242,12 @@ function clearLayoutBreaks() {
   render();
 }
 
+function toggleLetterCounter() {
+  app.counterOpen = !app.counterOpen;
+  app.menuOpen = false;
+  render();
+}
+
 function contextHalachaRef() {
   if (app.state === State.LISHMAH_GATE) return "Keset HaSofer.4";
   if (app.state === State.READY && isCurrentWordShemPending()) return "Keset HaSofer.10";
@@ -260,12 +285,9 @@ function render() {
   const root = document.getElementById("app");
   root.innerHTML = "";
 
-  const text = currentText();
-  const item = currentItem();
-
   root.appendChild(
     renderHeader({
-      title: item.title,
+      title: app.text?.title ?? "טוען...",
       onMenuToggle: toggleMenu,
       voiceStatus: app.voiceEnabled ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
@@ -273,27 +295,35 @@ function render() {
     })
   );
 
-  if (app.state === State.LISHMAH_GATE) {
-    root.appendChild(renderLishmahGate({ onConfirm: confirmLishmah }));
+  if (app.state === State.LOADING) {
+    root.appendChild(renderLoading());
+  } else if (app.state === State.LISHMAH_GATE) {
+    root.appendChild(renderLishmahGate({ kind: app.textKind, onConfirm: confirmLishmah }));
   } else if (app.state === State.READY) {
     const shemPending = isCurrentWordShemPending();
-    root.appendChild(renderTikkun({ words: text.words, index: app.index, verified: text.verified, shemPending }));
+    root.appendChild(
+      renderTikkun({ words: app.text.words, index: app.index, verified: app.text.verified, shemPending })
+    );
     if (shemPending) root.appendChild(renderShemGate({ onConfirm: confirmShem }));
   } else if (app.state === State.DONE) {
-    root.appendChild(renderDone({ wordCount: text.words.length }));
+    root.appendChild(renderDone({ wordCount: app.text.words.length }));
   } else if (app.state === State.REVIEW) {
-    root.appendChild(renderReview({ words: text.words, index: app.index, onExit: toggleReviewMode }));
+    root.appendChild(renderReview({ words: app.text.words, index: app.index, onExit: toggleReviewMode }));
   } else if (app.state === State.LAYOUT_EDITOR) {
     root.appendChild(
       renderLayoutEditor({
         textId: app.textId,
-        words: text.words,
+        words: app.text.words,
         lineBreakIndices: app.layoutBreaks,
         onToggleBreak: toggleLineBreak,
         onClear: clearLayoutBreaks,
         onExit: toggleLayoutEditor,
       })
     );
+  }
+
+  if (app.counterOpen && app.text) {
+    root.appendChild(renderLetterCounter({ text: app.text, onClose: toggleLetterCounter }));
   }
 
   if (app.halachaOpen) {
@@ -312,11 +342,14 @@ function render() {
     root.appendChild(
       renderDrawer({
         manifest: textManifest,
+        torahSection: app.torahSection,
+        expandedSefer: app.expandedSefer,
+        onToggleSefer: toggleSefer,
         activeId: app.textId,
         activeFont: app.font,
         rtOrder: app.rtOrder,
         voiceSensitivity: app.voiceSensitivity,
-        onSelectText: selectText,
+        onSelectText: switchToText,
         onSelectFont: selectFont,
         onSelectRTOrder: selectRTOrder,
         onSelectVoiceSensitivity: selectVoiceSensitivity,
@@ -324,6 +357,7 @@ function render() {
         reviewActive: app.state === State.REVIEW,
         onToggleLayoutEditor: toggleLayoutEditor,
         layoutEditorActive: app.state === State.LAYOUT_EDITOR,
+        onToggleLetterCounter: toggleLetterCounter,
         onClose: toggleMenu,
       })
     );
@@ -333,17 +367,21 @@ function render() {
   if (current) current.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-function init() {
+async function init() {
   document.documentElement.dataset.font = app.font;
-  verifyChecksum(TEXTS.mezuzah, "mezuzah");
-  verifyChecksum(buildTefillinRashi(), "tefillin-rashi");
-  verifyChecksum(buildTefillinRT(), "tefillin-rt");
-
-  const saved = loadPosition();
-  if (saved.textId === app.textId && saved.wordIndex < currentText().words.length) {
-    app.index = saved.wordIndex;
-  }
   render();
+
+  // Torah nav loads in parallel with the initial text; menu just shows the
+  // static sections until it lands.
+  loadTorahManifest()
+    .then((manifest) => {
+      app.torahSection = manifest;
+      if (app.menuOpen) render();
+    })
+    .catch((err) => console.warn("[torah] manifest unavailable:", err));
+
+  const last = loadLastTextId();
+  await switchToText(last && (last === "tefillin" || last === "mezuzah" || last.startsWith("torah:")) ? last : "mezuzah");
 
   if (app.voiceEnabled) voiceController.start();
 
