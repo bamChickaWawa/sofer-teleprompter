@@ -2,6 +2,7 @@ import { buildMezuzah, buildTefillinRashi, buildTefillinRT } from "./texts/compo
 import { textManifest } from "./texts/manifest.js";
 import { renderHeader, renderTikkun, renderDone, renderReview } from "./display.js";
 import { renderDrawer } from "./menu.js";
+import { renderLayoutEditor } from "./layout-editor.js";
 import { renderLishmahGate, renderShemGate } from "./shem.js";
 import { isShemWord } from "./declarations.js";
 import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
@@ -17,6 +18,7 @@ const State = Object.freeze({
   READY: "READY",
   DONE: "DONE",
   REVIEW: "REVIEW",
+  LAYOUT_EDITOR: "LAYOUT_EDITOR",
 });
 
 const settings = loadSettings();
@@ -42,6 +44,8 @@ const app = {
   halachaExpanded: null,
   halachaEntryStates: {},
   reviewReturnState: null,
+  layoutReturnState: null,
+  layoutBreaks: new Set(),
 };
 
 function currentItem() {
@@ -151,6 +155,7 @@ function selectText(id) {
   app.textId = id;
   app.index = 0;
   app.shemConfirmed = new Set();
+  app.layoutBreaks = new Set();
   app.state = app.lishmahConfirmed ? State.READY : State.LISHMAH_GATE;
   app.menuOpen = false;
   render();
@@ -188,6 +193,33 @@ function toggleReviewMode() {
     app.state = State.REVIEW;
   }
   app.menuOpen = false;
+  render();
+}
+
+function toggleLayoutEditor() {
+  if (app.state === State.LAYOUT_EDITOR) {
+    app.state = app.layoutReturnState.state;
+    app.index = app.layoutReturnState.index;
+    app.layoutReturnState = null;
+  } else if (app.state === State.READY || app.state === State.DONE) {
+    app.layoutReturnState = { state: app.state, index: app.index };
+    app.state = State.LAYOUT_EDITOR;
+  }
+  app.menuOpen = false;
+  render();
+}
+
+function toggleLineBreak(index) {
+  if (app.layoutBreaks.has(index)) {
+    app.layoutBreaks.delete(index);
+  } else {
+    app.layoutBreaks.add(index);
+  }
+  render();
+}
+
+function clearLayoutBreaks() {
+  app.layoutBreaks = new Set();
   render();
 }
 
@@ -251,6 +283,17 @@ function render() {
     root.appendChild(renderDone({ wordCount: text.words.length }));
   } else if (app.state === State.REVIEW) {
     root.appendChild(renderReview({ words: text.words, index: app.index, onExit: toggleReviewMode }));
+  } else if (app.state === State.LAYOUT_EDITOR) {
+    root.appendChild(
+      renderLayoutEditor({
+        textId: app.textId,
+        words: text.words,
+        lineBreakIndices: app.layoutBreaks,
+        onToggleBreak: toggleLineBreak,
+        onClear: clearLayoutBreaks,
+        onExit: toggleLayoutEditor,
+      })
+    );
   }
 
   if (app.halachaOpen) {
@@ -279,6 +322,8 @@ function render() {
         onSelectVoiceSensitivity: selectVoiceSensitivity,
         onToggleReview: toggleReviewMode,
         reviewActive: app.state === State.REVIEW,
+        onToggleLayoutEditor: toggleLayoutEditor,
+        layoutEditorActive: app.state === State.LAYOUT_EDITOR,
         onClose: toggleMenu,
       })
     );

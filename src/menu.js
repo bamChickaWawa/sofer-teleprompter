@@ -27,6 +27,8 @@ export function renderDrawer({
   onSelectVoiceSensitivity,
   onToggleReview,
   reviewActive,
+  onToggleLayoutEditor,
+  layoutEditorActive,
   onClose,
 }) {
   const overlay = document.createElement("div");
@@ -45,6 +47,12 @@ export function renderDrawer({
   reviewBtn.textContent = reviewActive ? "◀ חזרה לכתיבה" : "👁 מצב עיון (לא לכתיבה)";
   reviewBtn.addEventListener("click", onToggleReview);
   drawer.appendChild(reviewBtn);
+
+  const layoutBtn = document.createElement("button");
+  layoutBtn.className = `nav-item${layoutEditorActive ? " active" : ""}`;
+  layoutBtn.textContent = layoutEditorActive ? "◀ חזרה לכתיבה" : "✂ עורך פריסה (תיוג שורות)";
+  layoutBtn.addEventListener("click", onToggleLayoutEditor);
+  drawer.appendChild(layoutBtn);
 
   const fontHeading = document.createElement("h2");
   fontHeading.textContent = "גופן";
