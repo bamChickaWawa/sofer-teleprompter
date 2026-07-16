@@ -458,6 +458,20 @@ body {
   border-bottom: 2px dotted #b8860b;
 }
 
+/* ---------- special letters (otiyot rabati / zeira) ---------- */
+
+.letter-rabati {
+  font-size: 1.35em;
+  vertical-align: baseline;
+  letter-spacing: 0;
+}
+
+.letter-zeira {
+  font-size: 0.7em;
+  vertical-align: baseline;
+  letter-spacing: 0;
+}
+
 .tikkun-footer {
   margin-top: 1rem;
   font-family: sans-serif;

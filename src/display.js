@@ -72,7 +72,28 @@ export function shemDisplayText(word, { substituteSafek = true } = {}) {
 export function makeWordSpan(word, i, index, shemPending, opts = {}) {
   const span = document.createElement("span");
   span.className = wordClass(word, i, index, shemPending);
-  span.textContent = shemDisplayText(word, opts);
+
+  const display = shemDisplayText(word, opts);
+  if (word.specialLetters?.length && display === word.text) {
+    // per-letter sizing for rabati/zeira; letter-spacing stays 0 so the
+    // word still reads as one word. (Shem-substituted words never carry
+    // specialLetters, so the index alignment is safe.)
+    const specials = new Map(word.specialLetters.map((s) => [s.index, s.type]));
+    [...display].forEach((ch, ci) => {
+      const type = specials.get(ci);
+      if (type) {
+        const letterEl = document.createElement("span");
+        letterEl.className = `letter-${type}`;
+        letterEl.textContent = ch;
+        span.appendChild(letterEl);
+      } else {
+        span.appendChild(document.createTextNode(ch));
+      }
+    });
+  } else {
+    span.textContent = display;
+  }
+
   if (word.isSafekShem) span.title = "Possible Divine Name — check before writing (Keset HaSofer 10)";
   return span;
 }
