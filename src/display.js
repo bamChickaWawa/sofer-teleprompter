@@ -54,7 +54,27 @@ export function positionLabel(words, index) {
   return `Word ${index + 1} of ${words.length}${pasukPart}`;
 }
 
-export function renderTikkun({ words, index, verified, shemPending }) {
+export function makeWordSpan(word, i, index, shemPending) {
+  const span = document.createElement("span");
+  span.className = wordClass(word, i, index, shemPending);
+  span.textContent = word.text;
+  if (word.isSafekShem) span.title = "Possible Divine Name — check before writing (Keset HaSofer 10)";
+  return span;
+}
+
+function splitIntoLines(words) {
+  const lines = [];
+  let start = 0;
+  words.forEach((w, i) => {
+    if (w.lineBreakAfter || i === words.length - 1) {
+      lines.push({ start, end: i, endsParshia: w.parshiaBreak });
+      start = i + 1;
+    }
+  });
+  return lines;
+}
+
+export function renderTikkun({ words, index, verified, shemPending, hasLines }) {
   const wrap = document.createElement("div");
   wrap.className = "tikkun-wrap with-bottom-bar";
 
@@ -68,19 +88,48 @@ export function renderTikkun({ words, index, verified, shemPending }) {
     column.appendChild(banner);
   }
 
-  const text = document.createElement("div");
-  text.className = "tikkun-text";
+  if (hasLines) {
+    // Fixed-line klaf mode: one justified block per line, edge to edge like a
+    // written mezuzah. The setumah gap renders as an explicit blank at the
+    // start of the line after a parshia break. Only the very last line is
+    // left unjustified.
+    const linesEl = document.createElement("div");
+    linesEl.className = "klaf-lines";
+    const lines = splitIntoLines(words);
 
-  words.forEach((word, i) => {
-    const span = document.createElement("span");
-    span.className = wordClass(word, i, index, shemPending);
-    span.textContent = word.text;
-    if (word.isSafekShem) span.title = "Possible Divine Name — check before writing (Keset HaSofer 10)";
-    text.appendChild(span);
-    if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
-  });
+    lines.forEach((line, li) => {
+      const lineEl = document.createElement("div");
+      const isLast = li === lines.length - 1;
+      const afterParshia = li > 0 && lines[li - 1].endsParshia;
+      lineEl.className = `klaf-line${isLast ? " line-unjustified" : ""}${
+        index >= line.start && index <= line.end ? " current-line" : ""
+      }`;
 
-  column.appendChild(text);
+      if (afterParshia) {
+        const gap = document.createElement("span");
+        gap.className = "setumah-gap";
+        gap.setAttribute("aria-label", "setumah");
+        lineEl.appendChild(gap);
+      }
+
+      for (let i = line.start; i <= line.end; i++) {
+        lineEl.appendChild(makeWordSpan(words[i], i, index, shemPending));
+        if (i < line.end) lineEl.appendChild(document.createTextNode(" "));
+      }
+      linesEl.appendChild(lineEl);
+    });
+
+    column.appendChild(linesEl);
+  } else {
+    const text = document.createElement("div");
+    text.className = "tikkun-text";
+    words.forEach((word, i) => {
+      text.appendChild(makeWordSpan(word, i, index, shemPending));
+      if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
+    });
+    column.appendChild(text);
+  }
+
   wrap.appendChild(column);
   return wrap;
 }

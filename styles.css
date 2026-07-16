@@ -398,27 +398,63 @@ body {
   word-spacing: 0.15em;
 }
 
-.tikkun-text .word {
+/* ---------- fixed-line klaf mode ---------- */
+
+.klaf-lines {
+  font-family: var(--stam-font);
+  /* fixed lines must fit edge-to-edge: size tracks viewport up to a cap.
+     The longest mezuzah line is ~45 chars incl. spaces. */
+  font-size: calc(clamp(0.85rem, 3.5vw, 1.35rem) * var(--font-scale, 1));
+  line-height: 1.9;
+  direction: rtl;
+}
+
+.klaf-line {
+  text-align: justify;
+  text-align-last: justify;
+  padding: 0 0.15rem;
+  border-radius: 2px;
+}
+
+.klaf-line.line-unjustified {
+  text-align-last: right;
+}
+
+.klaf-line.current-line {
+  background: rgba(201, 162, 39, 0.10);
+}
+
+/* setumah: explicit blank gap (~9 letter-widths) at the start of the line
+   after a parshia break */
+.setumah-gap {
+  display: inline-block;
+  width: 5.5em;
+}
+
+/* ---------- word states (ink-based, both modes) ---------- */
+
+.word {
   display: inline;
 }
 
-.tikkun-text .word.written {
-  color: #6b6353;
-}
-
-.tikkun-text .word.current {
-  background: var(--highlight-bg);
-  box-shadow: 0 0 0 0.15em var(--highlight-bg);
-  border-radius: 2px;
-  font-weight: bold;
-}
-
-.tikkun-text .word.upcoming {
+.word.written {
   color: var(--klaf-ink);
 }
 
+.word.current {
+  background: var(--highlight-bg);
+  box-shadow: 0 0 0 0.12em var(--highlight-bg);
+  border-radius: 2px;
+  color: var(--klaf-ink);
+}
+
+.word.upcoming {
+  color: var(--klaf-ink);
+  opacity: 0.45;
+}
+
 /* שמות מסופקין: flag for attention, never gate - the app must not rule */
-.tikkun-text .word.safek-shem {
+.word.safek-shem {
   border-bottom: 2px dotted #b8860b;
 }
 
@@ -485,7 +521,7 @@ body {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 16px rgba(201, 162, 39, 0.5);
 }
 
-.tikkun-text .word.shem-pending {
+.word.shem-pending {
   background: none;
   color: var(--gold);
   box-shadow: 0 0 0 0.15em var(--gold);
@@ -596,7 +632,7 @@ body {
   opacity: 0.85;
 }
 
-.tikkun-text .word.review-position {
+.word.review-position {
   background: none;
   box-shadow: 0 0 0 0.15em #a33;
   border-radius: 2px;
@@ -650,7 +686,7 @@ body {
   direction: ltr;
 }
 
-.tikkun-text .word.line-break-marker {
+.word.line-break-marker {
   border-left: 3px solid var(--accent);
   padding-left: 0.2em;
   margin-left: 0.1em;

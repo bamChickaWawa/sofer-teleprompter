@@ -134,7 +134,7 @@ function scrollCurrentIntoView(behavior = "smooth") {
 }
 
 function applyIndexChange(prevIndex) {
-  const spans = document.querySelectorAll(".tikkun-text .word");
+  const spans = document.querySelectorAll(".tikkun-column .word");
   const words = app.text.words;
   if (!spans.length) {
     render();
@@ -142,6 +142,13 @@ function applyIndexChange(prevIndex) {
   }
   spans[prevIndex].className = wordClass(words[prevIndex], prevIndex, app.index, false);
   spans[app.index].className = wordClass(words[app.index], app.index, app.index, false);
+
+  // fixed-line mode: move the current-line emphasis band with the word
+  const prevLine = spans[prevIndex].closest(".klaf-line");
+  const newLine = spans[app.index].closest(".klaf-line");
+  if (prevLine && prevLine !== newLine) prevLine.classList.remove("current-line");
+  if (newLine) newLine.classList.add("current-line");
+
   const position = document.querySelector(".ctrl-position");
   if (position) position.textContent = positionLabel(words, app.index);
   const backBtn = document.querySelector(".ctrl-back");
@@ -394,7 +401,13 @@ function render() {
   } else if (app.state === State.READY) {
     const shemPending = !lishmahPending() && isCurrentWordShemPending();
     root.appendChild(
-      renderTikkun({ words: app.text.words, index: app.index, verified: app.text.verified, shemPending })
+      renderTikkun({
+        words: app.text.words,
+        index: app.index,
+        verified: app.text.verified,
+        shemPending,
+        hasLines: app.text.hasLines,
+      })
     );
     if (lishmahPending()) {
       root.appendChild(renderLishmahPanel({ kind: app.textKind, onConfirm: confirmLishmah }));
