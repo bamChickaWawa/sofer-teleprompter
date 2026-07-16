@@ -4,6 +4,30 @@
   "title": "פרשה רביעית - והיה אם שמע",
   "sefariaRef": "Deuteronomy.11.13-21",
   "wordCount": 122,
+  "layouts": {
+    "_note": "Line layouts keyed by context. Indices are parsha-local word indices that END a line. UNVERIFIED until checked against a printed tikkun, same as the text itself.",
+    "mezuzah22": {
+      "description": "Standard 22-line mezuzah, lines 7-22 (starts after the setumah gap)",
+      "lineEnds": [
+        7,
+        15,
+        23,
+        30,
+        37,
+        44,
+        52,
+        61,
+        70,
+        79,
+        88,
+        96,
+        103,
+        111,
+        119,
+        121
+      ]
+    }
+  },
   "words": [
     {
       "text": "והיה",

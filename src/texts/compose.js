@@ -5,36 +5,50 @@ import vhayaIm from "./parshiyot/vhaya-im.json";
 
 const PARSHIYOT = { kadesh, vhayaKi, shema, vhayaIm };
 
-function markParshiaBreaks(words, breakIndices) {
-  return words.map((w, i) => (breakIndices.has(i) ? { ...w, parshiaBreak: true } : { ...w, parshiaBreak: false }));
-}
-
-function compose(parshiot, title) {
+// layoutKey selects a per-parsha line layout (e.g. "mezuzah22"). When every
+// composed parsha carries that layout, the flat per-word lineBreakAfter flags
+// are derived from it and hasLines is set - the renderer then draws fixed,
+// justified lines instead of flowing text. Parshiyot without layout data
+// (tefillin, for now) stay free-flowing.
+function compose(parshiot, title, heTitle, { layoutKey } = {}) {
   const words = [];
-  const breakIndices = new Set();
+  const hasLines = Boolean(layoutKey) && parshiot.every((p) => p.layouts?.[layoutKey]);
+
   for (const p of parshiot) {
-    words.push(...p.words);
-    breakIndices.add(words.length - 1);
+    const layout = hasLines ? p.layouts[layoutKey] : null;
+    const lineEnds = new Set(layout ? layout.lineEnds : []);
+    p.words.forEach((w, i) => {
+      words.push({
+        ...w,
+        lineBreakAfter: lineEnds.has(i),
+        parshiaBreak: false,
+      });
+    });
+    words[words.length - 1].parshiaBreak = true;
   }
+
   return {
     verified: parshiot.every((p) => p.verified),
     _UNVERIFIED: "Composed from individually-fetched parshiyot; see src/texts/parshiyot/*.json for per-parsha verification status.",
     title,
+    heTitle,
+    hasLines,
     sefariaRef: parshiot.map((p) => p.sefariaRef).join(" + "),
     wordCount: words.length,
-    words: markParshiaBreaks(words, breakIndices),
+    words,
   };
 }
 
 export function buildMezuzah() {
-  return compose([PARSHIYOT.shema, PARSHIYOT.vhayaIm], "Mezuzah");
+  return compose([PARSHIYOT.shema, PARSHIYOT.vhayaIm], "Mezuzah", "מזוזה", { layoutKey: "mezuzah22" });
 }
 
 // Rashi order: Torah reading order (Shemot before Devarim; Shema before V'haya im shamoa).
 export function buildTefillinRashi() {
   return compose(
     [PARSHIYOT.kadesh, PARSHIYOT.vhayaKi, PARSHIYOT.shema, PARSHIYOT.vhayaIm],
-    "Tefillin (Rashi order)"
+    "Tefillin (Rashi order)",
+    "תפילין רש״י"
   );
 }
 
@@ -44,6 +58,7 @@ export function buildTefillinRashi() {
 export function buildTefillinRT() {
   return compose(
     [PARSHIYOT.kadesh, PARSHIYOT.vhayaKi, PARSHIYOT.vhayaIm, PARSHIYOT.shema],
-    "Tefillin (Rabbeinu Tam order)"
+    "Tefillin (Rabbeinu Tam order)",
+    "תפילין ר״ת"
   );
 }

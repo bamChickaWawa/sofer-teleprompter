@@ -4,6 +4,20 @@
   "title": "פרשה שלישית - שמע",
   "sefariaRef": "Deuteronomy.6.4-9",
   "wordCount": 48,
+  "layouts": {
+    "_note": "Line layouts keyed by context. Indices are parsha-local word indices that END a line. UNVERIFIED until checked against a printed tikkun, same as the text itself.",
+    "mezuzah22": {
+      "description": "Standard 22-line mezuzah, lines 1-6 (parsha ends with setumah)",
+      "lineEnds": [
+        7,
+        16,
+        25,
+        32,
+        40,
+        47
+      ]
+    }
+  },
   "words": [
     {
       "text": "שמע",
