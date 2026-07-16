@@ -910,3 +910,130 @@ body {
     display: none;
   }
 }
+
+/* ---------- amud dividers + layout note ---------- */
+
+.amud-divider {
+  font-family: var(--ui-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8a6a10;
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin: 1.1rem 0 0.5rem;
+  padding-top: 0.7rem;
+  border-top: 2px solid rgba(138, 122, 84, 0.45);
+  direction: rtl;
+}
+
+.amud-divider:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.layout-note {
+  font-family: var(--ui-font);
+  font-size: 0.62rem;
+  color: #9a8f6f;
+  text-align: center;
+  padding: 0.15rem 0.4rem 0.5rem;
+  direction: ltr;
+}
+
+/* ---------- landing page ---------- */
+
+.landing {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 3rem;
+  gap: 1.25rem;
+  overflow-y: auto;
+}
+
+.landing-heading {
+  text-align: center;
+}
+
+.landing-title {
+  font-family: var(--stam-font);
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  color: var(--gold);
+  direction: rtl;
+}
+
+.landing-sub {
+  font-family: var(--ui-font);
+  font-size: 0.75rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  width: min(92vw, 34rem);
+}
+
+.landing-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: #161513;
+  border: 1px solid #3a352a;
+  border-radius: 0.6rem;
+  padding: 1.6rem 0.75rem;
+  cursor: pointer;
+}
+
+.landing-tile:active,
+.landing-tile:hover {
+  border-color: var(--gold);
+}
+
+.landing-tile-small {
+  padding: 0.9rem 0.6rem;
+}
+
+.landing-continue {
+  grid-column: 1 / -1;
+  border-color: var(--gold);
+  background: rgba(201, 162, 39, 0.07);
+}
+
+.tile-he {
+  font-family: var(--stam-font);
+  font-size: 1.5rem;
+  color: var(--fg);
+  direction: rtl;
+}
+
+.landing-tile-small .tile-he {
+  font-size: 1.1rem;
+}
+
+.tile-en {
+  font-family: var(--ui-font);
+  font-size: 0.68rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.landing-back {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #bbb;
+  font-family: var(--ui-font);
+  font-size: 0.9rem;
+  padding: 0.2rem 0;
+  cursor: pointer;
+}
