@@ -7,6 +7,7 @@ export const LISHMAH_NUSACH_BY_KIND = {
   mezuzah: "הריני כותב מזוזה זו לשם קדושת מזוזה",
   tefillin: "הריני כותב פרשיות אלו לשם קדושת תפילין",
   torah: "ספר זה אני כותב לשם קדושת ספר תורה",
+  megillah: "הריני כותב מגילה זו לשם קדושת מגילת אסתר",
 };
 
 export function lishmahNusach(kind) {

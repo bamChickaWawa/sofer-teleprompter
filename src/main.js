@@ -18,9 +18,11 @@ import { isShemWord } from "./declarations.js";
 import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js";
 import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
 import { renderLetterCounter } from "./letter-counter.js";
+import { renderLanding } from "./landing.js";
 import { loadPosition, savePosition, loadLastTextId, loadSettings, saveSettings } from "./store.js";
 
 const State = Object.freeze({
+  LANDING: "LANDING",
   LOADING: "LOADING",
   READY: "READY",
   DONE: "DONE",
@@ -36,10 +38,11 @@ function updateSettings(patch) {
 }
 
 const app = {
-  state: State.LOADING,
+  state: State.LANDING,
+  landingView: "main",
   // KhS 4:1 - the declaration names what is being written, so confirming for
   // a mezuzah does not cover tefillin or a sefer. Per-kind, session only.
-  lishmahByKind: { mezuzah: false, tefillin: false, torah: false },
+  lishmahByKind: { mezuzah: false, tefillin: false, torah: false, megillah: false },
   textId: "mezuzah",
   textKind: "mezuzah",
   text: null,
@@ -68,6 +71,7 @@ const app = {
 
 function kindOf(textId) {
   if (textId.startsWith("torah:")) return "torah";
+  if (textId.startsWith("megillah:")) return "megillah";
   return textId; // "mezuzah" | "tefillin"
 }
 
@@ -306,6 +310,18 @@ function selectRTOrder(order) {
 
 // ---------- panels/modes ----------
 
+function goHome() {
+  app.state = State.LANDING;
+  app.landingView = "main";
+  app.menuOpen = false;
+  render();
+}
+
+function setLandingView(view) {
+  app.landingView = view;
+  render();
+}
+
 function toggleMenu() {
   app.menuOpen = !app.menuOpen;
   render();
@@ -403,8 +419,8 @@ function render() {
 
   root.appendChild(
     renderHeader({
-      heTitle: app.text?.heTitle ?? app.text?.title ?? "…",
-      subtitle: app.text?.title,
+      heTitle: app.state === State.LANDING ? "תיקון סופרים" : app.text?.heTitle ?? app.text?.title ?? "…",
+      subtitle: app.state === State.LANDING ? "Sofer Teleprompter" : app.text?.title,
       onMenuToggle: toggleMenu,
       voiceStatus: app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
@@ -412,7 +428,22 @@ function render() {
     })
   );
 
-  if (app.state === State.LOADING) {
+  if (app.state === State.LANDING) {
+    const lastId = loadLastTextId();
+    const valid =
+      lastId && (lastId === "mezuzah" || lastId === "tefillin" || lastId.startsWith("torah:") || lastId.startsWith("megillah:"));
+    root.appendChild(
+      renderLanding({
+        view: app.landingView,
+        torahSection: app.torahSection,
+        continueInfo: valid
+          ? { id: lastId, label: lastId.replace("torah:", "Torah · ").replace("megillah:", "Megillah · ") }
+          : null,
+        onSetView: setLandingView,
+        onSelectText: switchToText,
+      })
+    );
+  } else if (app.state === State.LOADING) {
     root.appendChild(renderLoading());
   } else if (app.state === State.READY) {
     const shemPending = !lishmahPending() && isCurrentWordShemPending();
@@ -423,6 +454,7 @@ function render() {
         verified: app.text.verified,
         shemPending,
         hasLines: app.text.hasLines,
+        layoutNote: app.text.layoutNote,
         wordOpts: { substituteSafek: app.substituteSafek, justifyMode: app.justifyMode },
       })
     );
@@ -511,6 +543,7 @@ function render() {
         onToggleLayoutEditor: toggleLayoutEditor,
         layoutEditorActive: app.state === State.LAYOUT_EDITOR,
         onToggleLetterCounter: toggleLetterCounter,
+        onGoHome: goHome,
         onClose: toggleMenu,
       })
     );
@@ -529,8 +562,7 @@ async function init() {
     })
     .catch((err) => console.warn("[torah] manifest unavailable:", err));
 
-  const last = loadLastTextId();
-  await switchToText(last && (last === "tefillin" || last === "mezuzah" || last.startsWith("torah:")) ? last : "mezuzah");
+  render(); // landing
 
   // NOTE: voice deliberately does NOT start here - no mic permission prompt
   // at page load. It starts on lishmah confirm or the header toggle.

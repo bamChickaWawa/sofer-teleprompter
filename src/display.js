@@ -74,10 +74,24 @@ export function wordClass(word, i, index, shemPending) {
   }${word.isSafekShem ? " safek-shem" : ""}`;
 }
 
+// Hebrew numerals for amud headers (א, ב ... יא, יב ... כח), the way a
+// sofer counts columns.
+export function hebrewNumeral(n) {
+  const ones = ["", "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט"];
+  const tens = ["", "י", "כ", "ל", "מ", "נ", "ס", "ע", "פ", "צ"];
+  if (n === 15) return "טו";
+  if (n === 16) return "טז";
+  const t = Math.floor(n / 10) % 10;
+  const o = n % 10;
+  const h = Math.floor(n / 100);
+  return "ק".repeat(h) + tens[t] + ones[o];
+}
+
 export function positionLabel(words, index) {
   const current = words[index];
+  const amudPart = current?.amud ? `עמוד ${hebrewNumeral(current.amud)} · שורה ${current.line} · ` : "";
   const pasukPart = current?.perek ? ` | ${current.perek}:${current.pasuk}` : "";
-  return `Word ${index + 1} of ${words.length}${pasukPart}`;
+  return `${amudPart}Word ${index + 1} of ${words.length}${pasukPart}`;
 }
 
 // Shem substitute glyphs (sofrus convention) - DISPLAY ONLY. The underlying
@@ -166,7 +180,7 @@ function splitIntoLines(words) {
   return lines;
 }
 
-export function renderTikkun({ words, index, verified, shemPending, hasLines, wordOpts = {} }) {
+export function renderTikkun({ words, index, verified, shemPending, hasLines, layoutNote, wordOpts = {} }) {
   const wrap = document.createElement("div");
   wrap.className = "tikkun-wrap with-bottom-bar";
 
@@ -180,6 +194,13 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
     column.appendChild(banner);
   }
 
+  if (layoutNote) {
+    const noteEl = document.createElement("div");
+    noteEl.className = "layout-note";
+    noteEl.textContent = layoutNote;
+    column.appendChild(noteEl);
+  }
+
   if (hasLines) {
     // Fixed-line klaf mode, sofrus-tikkun style: each line is a row with a
     // letter-count badge at the line start (right, RTL), the justified text,
@@ -190,7 +211,25 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
     linesEl.className = `klaf-lines${wordOpts.justifyMode === "letter" ? " justify-letter" : ""}`;
     const lines = splitIntoLines(words);
 
+    let amud = 1;
+    let lineInAmud = 0;
+    if (words.some((w) => w.columnBreakAfter)) {
+      const first = document.createElement("div");
+      first.className = "amud-divider";
+      first.textContent = "עמוד א";
+      linesEl.appendChild(first);
+    }
     lines.forEach((line, li) => {
+      // amud divider: the previous line ended a column
+      if (li > 0 && words[lines[li - 1].end].columnBreakAfter) {
+        amud++;
+        lineInAmud = 0;
+        const divider = document.createElement("div");
+        divider.className = "amud-divider";
+        divider.textContent = `עמוד ${hebrewNumeral(amud)}`;
+        linesEl.appendChild(divider);
+      }
+      lineInAmud++;
       const rowEl = document.createElement("div");
       const isLast = li === lines.length - 1;
       const afterParshia = li > 0 && lines[li - 1].endsParshia;
@@ -205,7 +244,7 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
       const countBadge = document.createElement("span");
       countBadge.className = "line-count";
       countBadge.textContent = letterCount;
-      countBadge.title = `${letterCount} letters in line ${li + 1}`;
+      countBadge.title = `${letterCount} letters`;
       rowEl.appendChild(countBadge);
 
       const lineEl = document.createElement("div");
@@ -226,7 +265,7 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
 
       const numBadge = document.createElement("span");
       numBadge.className = "line-num";
-      numBadge.textContent = li + 1;
+      numBadge.textContent = lineInAmud;
       rowEl.appendChild(numBadge);
 
       linesEl.appendChild(rowEl);

@@ -1,3 +1,4 @@
+import { MEGILLAH_FORMATS } from "./texts/loader.js";
 const FONT_OPTIONS = [
   { id: "ashkenaz", label: "Ashkenaz" },
   { id: "sefarad", label: "Sefarad" },
@@ -46,6 +47,7 @@ export function renderDrawer({
   onToggleLayoutEditor,
   layoutEditorActive,
   onToggleLetterCounter,
+  onGoHome,
   onClose,
 }) {
   const overlay = document.createElement("div");
@@ -58,6 +60,12 @@ export function renderDrawer({
   const drawer = document.createElement("div");
   drawer.className = "nav-drawer";
   drawer.addEventListener("click", (e) => e.stopPropagation());
+
+  const homeBtn = document.createElement("button");
+  homeBtn.className = "nav-item";
+  homeBtn.textContent = "Home — בחירת כתיבה";
+  homeBtn.addEventListener("click", onGoHome);
+  drawer.appendChild(homeBtn);
 
   const reviewBtn = document.createElement("button");
   reviewBtn.className = `nav-item review-toggle${reviewActive ? " active" : ""}`;
@@ -180,6 +188,18 @@ export function renderDrawer({
       btn.addEventListener("click", () => onSelectText(item.id));
       drawer.appendChild(btn);
     }
+  }
+
+  const megillahHeading = document.createElement("h2");
+  megillahHeading.textContent = "Megillat Esther";
+  drawer.appendChild(megillahHeading);
+  for (const [key, fmt] of Object.entries(MEGILLAH_FORMATS)) {
+    const id = `megillah:${key}`;
+    const btn = document.createElement("button");
+    btn.className = `nav-item nav-subitem${id === activeId ? " active" : ""}`;
+    btn.textContent = `${fmt.heLabel} — ${fmt.label}`;
+    btn.addEventListener("click", () => onSelectText(id));
+    drawer.appendChild(btn);
   }
 
   // Torah: sefer -> parsha, sofrus-style. Appears once the runtime manifest loads.

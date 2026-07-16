@@ -11,6 +11,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { cleanVerse } from "./lib-strip.mjs";
 
 const BOOKS = [
   { en: "Genesis", he: "בראשית" },
@@ -22,28 +23,6 @@ const BOOKS = [
 
 const OUT_DIR = "public/texts/torah";
 
-function stripNikud(s) {
-  return (
-    s
-      .replace(/<[^>]+>/g, "")
-      .replace(/\*\([^)]*\)/g, "") // editorial footnotes, e.g. *(בספרי תימן...)
-      // Ketiv/qere: MAM renders "(ketiv) [qere]". The scroll contains the
-      // ketiv by definition; the qere is only read. Drop the qere span,
-      // unwrap the ketiv. This also handles qere-velo-ketiv (dropped, since
-      // it is not written) and ketiv-velo-qere (kept, since it is written).
-      .replace(/\[[^\]]*\]/g, "")
-      .replace(/[()]/g, "")
-      .replace(new RegExp("\\u05BE", "g"), " ") // maqaf -> space
-      .replace(new RegExp("[\\u0591-\\u05C7]", "g"), "")
-      .replace(new RegExp("[\\u200E\\u200F\\u200D\\u034F]", "g"), "")
-      .replace(/&nbsp;/g, " ")
-      .replace(/&thinsp;/g, " ")
-      .replace(/\{[פסר]\}/g, "")
-      .replace(/[*]/g, "")
-      .replace(/\s+/g, " ")
-      .trim()
-  );
-}
 
 async function fetchJson(url) {
   for (let attempt = 1; attempt <= 3; attempt++) {
@@ -94,17 +73,18 @@ for (const book of BOOKS) {
       const chapterNum = startChapter + ci;
       chapterVerses.forEach((verseRaw, vi) => {
         const verseNum = ci === 0 ? startVerse + vi : vi + 1;
-        const clean = stripNikud(verseRaw);
-        if (!clean) return;
-        const words = clean.split(" ").filter(Boolean);
+        const { words, specials } = cleanVerse(verseRaw);
+        if (!words.length) return;
         wordCount += words.length;
-        verses.push({ c: chapterNum, v: verseNum, words });
+        const verse = { c: chapterNum, v: verseNum, words };
+        if (specials.length) verse.s = specials;
+        verses.push(verse);
       });
     });
 
     const out = {
       _UNVERIFIED:
-        "Fetched from Sefaria (Miqra according to the Masorah), nikud/teamim stripped mechanically - NOT hand-verified against a printed tikkun. Do not write from this text until 'verified' is flipped to true by the sofer.",
+        "Fetched from Sefaria (Miqra according to the Masorah), nikud/teamim stripped mechanically; rabati/zeira letters extracted from MAM's big/small markup - NOT hand-verified against a printed tikkun. Do not write from this text until 'verified' is flipped to true by the sofer.",
       verified: false,
       sefer: book.en,
       seferHe: book.he,
