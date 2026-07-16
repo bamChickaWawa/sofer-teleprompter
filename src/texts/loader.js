@@ -1,13 +1,5 @@
 import { buildMezuzah, buildTefillinRashi, buildTefillinRT } from "./compose.js";
-
-// Certain-Shem detection: the Tetragrammaton, bare or behind prefix letters.
-const SHEM_RE = /^[ולבמכ]{0,2}יהוה$/;
-
-// Doubtful-Name detection (שמות מסופקין): the אלהים family. These are
-// USUALLY kodesh but sometimes chol (judges, idols), which is exactly why
-// they get flagged for the sofer's attention rather than gated - the app
-// must not rule on safek Names. See Keset HaSofer ch. 10.
-const SAFEK_RE = /^[ולבמכהש]{0,2}אלה(ים|יך|ינו|יכם|יהם|י)$/;
+import { SHEM_RE, SAFEK_RE } from "../declarations.js";
 
 // Adapts the compact Torah format ({verses:[{c,v,words:[...]}]}) into the
 // word-object shape the display/state machine uses.

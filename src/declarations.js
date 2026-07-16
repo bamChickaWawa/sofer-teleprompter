@@ -22,3 +22,10 @@ export const SHEM_KINUI = ["השם", "hashem"];
 export function isShemWord(word) {
   return word?.isShem === true;
 }
+
+// Certain-Shem detection: the Tetragrammaton, bare or behind prefix letters.
+export const SHEM_RE = /^[ולבמכ]{0,2}יהוה$/;
+
+// Doubtful-Name detection (שמות מסופקין): the אלהים family. Usually kodesh
+// but sometimes chol - flagged for the sofer's attention, never gated.
+export const SAFEK_RE = /^[ולבמכהש]{0,2}אלה(ים|יך|ינו|יכם|יהם|י)$/;

@@ -1,3 +1,4 @@
+import { SAFEK_RE } from "../declarations.js";
 import kadesh from "./parshiyot/kadesh.json";
 import vhayaKi from "./parshiyot/vhaya-ki.json";
 import shema from "./parshiyot/shema.json";
@@ -20,6 +21,7 @@ function compose(parshiot, title, heTitle, { layoutKey } = {}) {
     p.words.forEach((w, i) => {
       words.push({
         ...w,
+        isSafekShem: SAFEK_RE.test(w.text),
         lineBreakAfter: lineEnds.has(i),
         parshiaBreak: false,
       });

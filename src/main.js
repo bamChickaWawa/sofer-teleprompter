@@ -50,6 +50,7 @@ const app = {
   font: settings.font ?? "ashkenaz",
   fontScale: settings.fontScale ?? 1,
   rtOrder: settings.rtOrder ?? "rashi",
+  substituteSafek: settings.substituteSafek ?? true,
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceSensitivity: settings.voiceSensitivity ?? "normal",
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
@@ -259,6 +260,12 @@ function toggleVoice() {
 
 // ---------- settings ----------
 
+function toggleSubstituteSafek() {
+  app.substituteSafek = !app.substituteSafek;
+  updateSettings({ substituteSafek: app.substituteSafek });
+  render();
+}
+
 function selectVoiceSensitivity(sensitivity) {
   app.voiceSensitivity = sensitivity;
   updateSettings({ voiceSensitivity: sensitivity });
@@ -407,6 +414,7 @@ function render() {
         verified: app.text.verified,
         shemPending,
         hasLines: app.text.hasLines,
+        wordOpts: { substituteSafek: app.substituteSafek },
       })
     );
     if (lishmahPending()) {
@@ -436,7 +444,7 @@ function render() {
       })
     );
   } else if (app.state === State.REVIEW) {
-    root.appendChild(renderReview({ words: app.text.words, index: app.index, onExit: toggleReviewMode }));
+    root.appendChild(renderReview({ words: app.text.words, index: app.index, onExit: toggleReviewMode, wordOpts: { substituteSafek: app.substituteSafek } }));
   } else if (app.state === State.LAYOUT_EDITOR) {
     root.appendChild(
       renderLayoutEditor({
@@ -478,6 +486,8 @@ function render() {
         fontScale: app.fontScale,
         rtOrder: app.rtOrder,
         voiceSensitivity: app.voiceSensitivity,
+        substituteSafek: app.substituteSafek,
+        onToggleSubstituteSafek: toggleSubstituteSafek,
         onSelectText: switchToText,
         onSelectFont: selectFont,
         onSelectFontScale: selectFontScale,

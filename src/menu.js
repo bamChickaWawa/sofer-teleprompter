@@ -32,6 +32,8 @@ export function renderDrawer({
   fontScale,
   rtOrder,
   voiceSensitivity,
+  substituteSafek,
+  onToggleSubstituteSafek,
   onSelectText,
   onSelectFont,
   onSelectFontScale,
@@ -117,6 +119,19 @@ export function renderDrawer({
     rtRow.appendChild(btn);
   }
   drawer.appendChild(rtRow);
+
+  const displayHeading = document.createElement("h2");
+  displayHeading.textContent = "Shem display";
+  drawer.appendChild(displayHeading);
+
+  const safekRow = document.createElement("div");
+  safekRow.className = "font-choice-row";
+  const safekBtn = document.createElement("button");
+  safekBtn.className = `font-choice${substituteSafek ? " active" : ""}`;
+  safekBtn.textContent = substituteSafek ? "Safek-Shem glyphs: on" : "Safek-Shem glyphs: off";
+  safekBtn.addEventListener("click", onToggleSubstituteSafek);
+  safekRow.appendChild(safekBtn);
+  drawer.appendChild(safekRow);
 
   const sensitivityHeading = document.createElement("h2");
   sensitivityHeading.textContent = "Voice match sensitivity";

@@ -54,10 +54,25 @@ export function positionLabel(words, index) {
   return `Word ${index + 1} of ${words.length}${pasukPart}`;
 }
 
-export function makeWordSpan(word, i, index, shemPending) {
+// Shem substitute glyphs (sofrus convention) - DISPLAY ONLY. The underlying
+// word.text keeps the true letters for voice matching, letter counts, and
+// verification; only what's painted on screen changes, so the actual Shem is
+// never displayed. יהוה -> יﬣוה (first ה becomes U+FB23 wide-he, matching the
+// sofrus rendering); אלהים-family -> ﭏ (U+FB4F alef-lamed ligature) for the
+// leading אל.
+const HE_SUBSTITUTE = "ﬣ";
+const ALEF_LAMED = "ﭏ";
+
+export function shemDisplayText(word, { substituteSafek = true } = {}) {
+  if (word.isShem) return word.text.replace("ה", HE_SUBSTITUTE);
+  if (word.isSafekShem && substituteSafek) return word.text.replace("אל", ALEF_LAMED);
+  return word.text;
+}
+
+export function makeWordSpan(word, i, index, shemPending, opts = {}) {
   const span = document.createElement("span");
   span.className = wordClass(word, i, index, shemPending);
-  span.textContent = word.text;
+  span.textContent = shemDisplayText(word, opts);
   if (word.isSafekShem) span.title = "Possible Divine Name — check before writing (Keset HaSofer 10)";
   return span;
 }
@@ -74,7 +89,7 @@ function splitIntoLines(words) {
   return lines;
 }
 
-export function renderTikkun({ words, index, verified, shemPending, hasLines }) {
+export function renderTikkun({ words, index, verified, shemPending, hasLines, wordOpts = {} }) {
   const wrap = document.createElement("div");
   wrap.className = "tikkun-wrap with-bottom-bar";
 
@@ -113,7 +128,7 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines }) 
       }
 
       for (let i = line.start; i <= line.end; i++) {
-        lineEl.appendChild(makeWordSpan(words[i], i, index, shemPending));
+        lineEl.appendChild(makeWordSpan(words[i], i, index, shemPending, wordOpts));
         if (i < line.end) lineEl.appendChild(document.createTextNode(" "));
       }
       linesEl.appendChild(lineEl);
@@ -124,7 +139,7 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines }) 
     const text = document.createElement("div");
     text.className = "tikkun-text";
     words.forEach((word, i) => {
-      text.appendChild(makeWordSpan(word, i, index, shemPending));
+      text.appendChild(makeWordSpan(word, i, index, shemPending, wordOpts));
       if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
     });
     column.appendChild(text);
@@ -169,7 +184,7 @@ export function renderControlBar({ words, index, locked, onBack, onAdvance }) {
   return bar;
 }
 
-export function renderReview({ words, index, onExit }) {
+export function renderReview({ words, index, onExit, wordOpts = {} }) {
   const wrap = document.createElement("div");
   wrap.className = "review-mode";
 
@@ -198,7 +213,7 @@ export function renderReview({ words, index, onExit }) {
   words.forEach((word, i) => {
     const span = document.createElement("span");
     span.className = `word ${i === index ? "review-position" : i < index ? "written" : "upcoming"}`;
-    span.textContent = word.text;
+    span.textContent = shemDisplayText(word, wordOpts);
     text.appendChild(span);
     if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
   });
