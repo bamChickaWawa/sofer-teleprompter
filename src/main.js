@@ -395,7 +395,8 @@ function render() {
 
   root.appendChild(
     renderHeader({
-      title: app.text?.title ?? "Loading…",
+      heTitle: app.text?.heTitle ?? app.text?.title ?? "…",
+      subtitle: app.text?.title,
       onMenuToggle: toggleMenu,
       voiceStatus: app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,

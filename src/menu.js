@@ -59,19 +59,19 @@ export function renderDrawer({
 
   const reviewBtn = document.createElement("button");
   reviewBtn.className = `nav-item review-toggle${reviewActive ? " active" : ""}`;
-  reviewBtn.textContent = reviewActive ? "‹ Back to writing" : "👁 Review mode (not for writing)";
+  reviewBtn.textContent = reviewActive ? "‹ Back to writing" : "Review mode (not for writing)";
   reviewBtn.addEventListener("click", onToggleReview);
   drawer.appendChild(reviewBtn);
 
   const layoutBtn = document.createElement("button");
   layoutBtn.className = `nav-item${layoutEditorActive ? " active" : ""}`;
-  layoutBtn.textContent = layoutEditorActive ? "‹ Back to writing" : "✂ Layout editor (mark lines)";
+  layoutBtn.textContent = layoutEditorActive ? "‹ Back to writing" : "Layout editor (mark lines)";
   layoutBtn.addEventListener("click", onToggleLayoutEditor);
   drawer.appendChild(layoutBtn);
 
   const counterBtn = document.createElement("button");
   counterBtn.className = "nav-item";
-  counterBtn.textContent = "🔢 Letter counter";
+  counterBtn.textContent = "Letter counter";
   counterBtn.addEventListener("click", onToggleLetterCounter);
   drawer.appendChild(counterBtn);
 

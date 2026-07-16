@@ -21,6 +21,7 @@
   --klaf-border: #8a7a54;
   --highlight-bg: #f2d477;
   --header-h: 3.25rem;
+  --ui-font: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Hebrew", sans-serif;
 }
 
 html[data-font="ashkenaz"] {
@@ -74,24 +75,56 @@ body {
 }
 
 .app-header .title {
-  font-family: sans-serif;
-  font-size: 1.05rem;
-  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   flex: 1 1 auto;
   min-width: 0;
 }
 
+.title-he {
+  font-family: var(--ui-font);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--fg);
+  direction: rtl;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-sub {
+  font-family: var(--ui-font);
+  font-size: 0.62rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .app-header button {
   background: none;
-  border: 1px solid #3a3a3a;
-  color: var(--fg);
-  font-size: 0.95rem;
-  padding: 0.35rem 0.6rem;
+  border: 1px solid #333;
+  color: #bbb;
+  font-family: var(--ui-font);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.55rem;
   border-radius: 0.4rem;
   white-space: nowrap;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.icon-btn svg {
+  flex: 0 0 auto;
 }
 
 .app-header button:active {
@@ -104,24 +137,23 @@ body {
   flex: 0 0 auto;
 }
 
-.voice-status {
-  font-size: 0.85rem !important;
-  white-space: nowrap;
-}
-
 .voice-status-listening {
   border-color: var(--accent) !important;
-  color: var(--accent);
+  color: var(--accent) !important;
 }
 
 .voice-status-denied,
 .voice-status-error {
-  border-color: #a33 !important;
-  color: #d97a7a;
+  border-color: #7a2a2a !important;
+  color: #c96a6a !important;
+}
+
+.voice-status-stopped {
+  color: #666 !important;
 }
 
 .voice-status:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
 }
 
 /* ---------- nav drawer (sofrus-style menu) ---------- */
@@ -166,7 +198,7 @@ body {
   background: none;
   border: none;
   color: var(--fg);
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 1rem;
   padding: 0.6rem 0.3rem;
   border-radius: 0.3rem;
@@ -208,7 +240,7 @@ body {
 
 .nav-loading {
   color: var(--dim);
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.85rem;
   padding: 0.4rem 0.3rem;
 }
@@ -220,7 +252,7 @@ body {
 }
 
 .halacha-context-note {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.75rem;
   color: var(--accent);
   margin-top: 0.25rem;
@@ -237,7 +269,7 @@ body {
   background: none;
   border: none;
   color: var(--fg);
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.95rem;
   padding: 0.5rem 0.3rem;
   border-radius: 0.3rem;
@@ -261,7 +293,7 @@ body {
   border-radius: 0.3rem;
   padding: 0.75rem;
   margin: 0.25rem 0 0.75rem;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.85rem;
   color: #ccc;
   direction: ltr;
@@ -329,20 +361,24 @@ body {
 }
 
 .control-bar button {
-  font-family: sans-serif;
-  font-weight: bold;
+  font-family: var(--ui-font);
+  font-weight: 600;
   border-radius: 0.5rem;
   border: 1px solid #3a3a3a;
-  background: #1d1d1d;
-  color: var(--fg);
+  background: none;
+  color: #bbb;
 }
 
 .ctrl-next {
   flex: 1 1 60%;
-  font-size: 1.3rem;
-  padding: 0.9rem 0;
+  font-size: 1.15rem;
+  padding: 0.85rem 0;
   border-color: var(--accent) !important;
   color: var(--accent) !important;
+}
+
+.ctrl-next.ctrl-locked {
+  opacity: 0.55;
 }
 
 .ctrl-next:active {
@@ -373,7 +409,7 @@ body {
   color: var(--fg);
   border-radius: 0.5rem;
   padding: 0.7rem 1.6rem;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 1rem;
 }
 
@@ -474,7 +510,7 @@ body {
 
 .tikkun-footer {
   margin-top: 1rem;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.85rem;
   color: #7a7256;
   text-align: center;
@@ -482,12 +518,16 @@ body {
 }
 
 .unverified-banner {
-  background: #3a1f1f;
-  color: #f2b8b8;
-  font-family: sans-serif;
-  font-size: 0.8rem;
+  background: rgba(184, 134, 11, 0.14);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.45);
+  color: #8a6a10;
+  font-family: var(--ui-font);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
   text-align: center;
-  padding: 0.4rem;
+  padding: 0.25rem 0.4rem;
+  margin: -0.5rem -0.5rem 0.75rem;
+  border-radius: 4px 4px 0 0;
   direction: ltr;
 }
 
@@ -506,7 +546,7 @@ body {
 }
 
 .gate-label {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.72rem;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -522,7 +562,7 @@ body {
 }
 
 .gate-note {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.85rem;
   color: var(--dim);
   max-width: 24rem;
@@ -578,7 +618,7 @@ body {
   border: 2px solid var(--gold);
   background: #1a1a1a;
   color: var(--gold);
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 1.1rem;
   font-weight: bold;
   padding: 0.9rem 2.5rem;
@@ -618,7 +658,7 @@ body {
   flex: 0 0 auto;
   background: repeating-linear-gradient(45deg, #7a1f1f, #7a1f1f 12px, #5c1414 12px, #5c1414 24px);
   color: #fff;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-weight: bold;
   padding: 0.6rem 1rem;
   display: flex;
@@ -635,7 +675,7 @@ body {
   border-radius: 0.3rem;
   padding: 0.4rem 0.8rem;
   font-weight: bold;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
 }
 
 .review-tikkun-wrap {
@@ -666,7 +706,7 @@ body {
   background: #1a2a1a;
   border-bottom: 2px solid var(--accent);
   color: var(--fg);
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-weight: bold;
   padding: 0.6rem 1rem;
   display: flex;
@@ -686,13 +726,13 @@ body {
   color: var(--accent);
   border-radius: 0.3rem;
   padding: 0.3rem 0.6rem;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.85rem;
 }
 
 .editor-hint {
   flex: 0 0 auto;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.8rem;
   color: var(--dim);
   text-align: center;
@@ -757,13 +797,13 @@ body {
 }
 
 .counter-count {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.8rem;
   color: var(--fg);
 }
 
 .counter-totals {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 0.9rem;
   color: var(--dim);
   margin: 0.75rem 0;
@@ -775,7 +815,7 @@ body {
   color: var(--fg);
   border-radius: 0.4rem;
   padding: 0.4rem 1.5rem;
-  font-family: sans-serif;
+  font-family: var(--ui-font);
 }
 
 /* ---------- done screen ---------- */
@@ -789,15 +829,41 @@ body {
   gap: 1rem;
 }
 
+.done-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1.5rem !important;
+}
+
 .done-message {
   font-family: var(--stam-font);
-  font-size: 12vw;
-  color: var(--gold);
+  font-size: clamp(2rem, 9vw, 3.2rem);
+  color: var(--klaf-ink);
+  direction: rtl;
+}
+
+.done-count {
+  font-family: var(--ui-font);
+  font-size: 0.85rem;
+  color: #7a7256;
+  direction: ltr;
 }
 
 .counter {
-  font-family: sans-serif;
+  font-family: var(--ui-font);
   font-size: 1rem;
   color: var(--dim);
   direction: ltr;
+}
+
+/* ---------- narrow screens: icons-only header ---------- */
+@media (max-width: 480px) {
+  .icon-btn-label {
+    display: none;
+  }
+  .title-sub {
+    display: none;
+  }
 }
