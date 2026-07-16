@@ -124,6 +124,36 @@ export function makeWordSpan(word, i, index, shemPending, opts = {}) {
   return span;
 }
 
+// Letter-spacing justification (sofrus's second justify mode): instead of
+// stretching the gaps between words, stretch the spacing between letters -
+// closer to how a sofer actually fills a line. Measured from the real DOM
+// (Range width) so rabati letters and the setumah gap are accounted for.
+// Runs after render; the CSS class justify-letter disables the browser's
+// word-gap justification so the two modes never stack.
+export function applyLetterJustify(root = document) {
+  const lines = root.querySelectorAll(".klaf-lines.justify-letter .klaf-line");
+  const range = document.createRange();
+  lines.forEach((el) => {
+    el.style.letterSpacing = "0px";
+    if (el.classList.contains("line-unjustified")) return;
+    range.selectNodeContents(el);
+    const natural = range.getBoundingClientRect().width;
+    const cs = getComputedStyle(el);
+    const target = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    // letter-spacing is added after EVERY char including the last, and it
+    // also wraps atomic inlines like the setumah gap span - a safety margin
+    // keeps a line from ever wrapping (falling a hair short beats breaking
+    // the line). The gap line needs extra headroom for the spacing added
+    // around the inline-block itself.
+    const chars = el.textContent.length;
+    const hasGap = Boolean(el.querySelector(".setumah-gap"));
+    const deficit = target - natural - (hasGap ? 6 : 3);
+    if (chars > 1 && deficit > 0) {
+      el.style.letterSpacing = `${(Math.floor((deficit / chars) * 100) / 100).toFixed(2)}px`;
+    }
+  });
+}
+
 function splitIntoLines(words) {
   const lines = [];
   let start = 0;
@@ -151,21 +181,35 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
   }
 
   if (hasLines) {
-    // Fixed-line klaf mode: one justified block per line, edge to edge like a
-    // written mezuzah. The setumah gap renders as an explicit blank at the
-    // start of the line after a parshia break. Only the very last line is
-    // left unjustified.
+    // Fixed-line klaf mode, sofrus-tikkun style: each line is a row with a
+    // letter-count badge at the line start (right, RTL), the justified text,
+    // and a line-number badge at the line end. The setumah gap renders as an
+    // explicit blank at the start of the line after a parshia break. Only the
+    // very last line is left unjustified.
     const linesEl = document.createElement("div");
-    linesEl.className = "klaf-lines";
+    linesEl.className = `klaf-lines${wordOpts.justifyMode === "letter" ? " justify-letter" : ""}`;
     const lines = splitIntoLines(words);
 
     lines.forEach((line, li) => {
-      const lineEl = document.createElement("div");
+      const rowEl = document.createElement("div");
       const isLast = li === lines.length - 1;
       const afterParshia = li > 0 && lines[li - 1].endsParshia;
-      lineEl.className = `klaf-line${isLast ? " line-unjustified" : ""}${
-        index >= line.start && index <= line.end ? " current-line" : ""
-      }`;
+      rowEl.className = `klaf-row${index >= line.start && index <= line.end ? " current-line" : ""}`;
+
+      // letter count from the TRUE text (word.text), never the display
+      // substitutes - this is the checking aid, it must match the klaf.
+      let letterCount = 0;
+      for (let i = line.start; i <= line.end; i++) {
+        letterCount += words[i].text.length;
+      }
+      const countBadge = document.createElement("span");
+      countBadge.className = "line-count";
+      countBadge.textContent = letterCount;
+      countBadge.title = `${letterCount} letters in line ${li + 1}`;
+      rowEl.appendChild(countBadge);
+
+      const lineEl = document.createElement("div");
+      lineEl.className = `klaf-line${isLast ? " line-unjustified" : ""}`;
 
       if (afterParshia) {
         const gap = document.createElement("span");
@@ -178,7 +222,14 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, wo
         lineEl.appendChild(makeWordSpan(words[i], i, index, shemPending, wordOpts));
         if (i < line.end) lineEl.appendChild(document.createTextNode(" "));
       }
-      linesEl.appendChild(lineEl);
+      rowEl.appendChild(lineEl);
+
+      const numBadge = document.createElement("span");
+      numBadge.className = "line-num";
+      numBadge.textContent = li + 1;
+      rowEl.appendChild(numBadge);
+
+      linesEl.appendChild(rowEl);
     });
 
     column.appendChild(linesEl);

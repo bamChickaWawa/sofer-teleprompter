@@ -439,25 +439,68 @@ body {
 .klaf-lines {
   font-family: var(--stam-font);
   /* fixed lines must fit edge-to-edge: size tracks viewport up to a cap.
-     The longest mezuzah line is ~45 chars incl. spaces. */
-  font-size: calc(clamp(0.85rem, 3.5vw, 1.35rem) * var(--font-scale, 1));
+     The longest mezuzah line is ~45 chars incl. spaces, and the count/number
+     badges take ~3rem of each row. */
+  font-size: calc(clamp(0.8rem, 3vw, 1.22rem) * var(--font-scale, 1));
   line-height: 1.9;
   direction: rtl;
 }
 
+/* each line is a row: [letter-count][text][line-number] (RTL: count on the
+   right at the line start, number on the left) - sofrus tikkun style */
+.klaf-row {
+  display: flex;
+  direction: rtl;
+  align-items: baseline;
+  gap: 0.5rem;
+  border-radius: 2px;
+  /* sirtut: the ruled line each row of ktav hangs from */
+  border-bottom: 1px solid rgba(138, 122, 84, 0.28);
+}
+
+.klaf-row.current-line {
+  background: rgba(201, 162, 39, 0.10);
+}
+
 .klaf-line {
+  flex: 1 1 auto;
+  min-width: 0;
   text-align: justify;
   text-align-last: justify;
   padding: 0 0.15rem;
-  border-radius: 2px;
 }
 
 .klaf-line.line-unjustified {
   text-align-last: right;
 }
 
-.klaf-line.current-line {
-  background: rgba(201, 162, 39, 0.10);
+/* letter-spacing justification: JS sets per-line letter-spacing; the
+   browser's word-gap stretch is turned off so the modes never stack */
+.klaf-lines.justify-letter .klaf-line {
+  text-align-last: right;
+}
+
+.line-count,
+.line-num {
+  flex: 0 0 auto;
+  font-family: var(--ui-font);
+  font-size: 0.58rem;
+  line-height: 1;
+  min-width: 1.5em;
+  text-align: center;
+  padding: 0.18rem 0.2rem;
+  border-radius: 3px;
+  align-self: center;
+}
+
+.line-count {
+  color: #6b5a12;
+  background: rgba(201, 162, 39, 0.16);
+  border: 1px solid rgba(138, 122, 84, 0.35);
+}
+
+.line-num {
+  color: #9a8f6f;
 }
 
 /* setumah: explicit blank gap (~9 letter-widths) at the start of the line

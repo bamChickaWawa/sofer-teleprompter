@@ -34,6 +34,8 @@ export function renderDrawer({
   voiceSensitivity,
   substituteSafek,
   onToggleSubstituteSafek,
+  justifyMode,
+  onSelectJustifyMode,
   onSelectText,
   onSelectFont,
   onSelectFontScale,
@@ -119,6 +121,24 @@ export function renderDrawer({
     rtRow.appendChild(btn);
   }
   drawer.appendChild(rtRow);
+
+  const justifyHeading = document.createElement("h2");
+  justifyHeading.textContent = "Line justification";
+  drawer.appendChild(justifyHeading);
+
+  const justifyRow = document.createElement("div");
+  justifyRow.className = "font-choice-row";
+  for (const opt of [
+    { id: "word", label: "Word spacing" },
+    { id: "letter", label: "Letter spacing" },
+  ]) {
+    const btn = document.createElement("button");
+    btn.className = `font-choice${opt.id === justifyMode ? " active" : ""}`;
+    btn.textContent = opt.label;
+    btn.addEventListener("click", () => onSelectJustifyMode(opt.id));
+    justifyRow.appendChild(btn);
+  }
+  drawer.appendChild(justifyRow);
 
   const displayHeading = document.createElement("h2");
   displayHeading.textContent = "Shem display";

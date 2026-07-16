@@ -9,6 +9,7 @@ import {
   renderLoading,
   wordClass,
   positionLabel,
+  applyLetterJustify,
 } from "./display.js";
 import { renderDrawer } from "./menu.js";
 import { renderLayoutEditor } from "./layout-editor.js";
@@ -51,6 +52,7 @@ const app = {
   fontScale: settings.fontScale ?? 1,
   rtOrder: settings.rtOrder ?? "rashi",
   substituteSafek: settings.substituteSafek ?? true,
+  justifyMode: settings.justifyMode ?? "word",
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceSensitivity: settings.voiceSensitivity ?? "normal",
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
@@ -145,8 +147,8 @@ function applyIndexChange(prevIndex) {
   spans[app.index].className = wordClass(words[app.index], app.index, app.index, false);
 
   // fixed-line mode: move the current-line emphasis band with the word
-  const prevLine = spans[prevIndex].closest(".klaf-line");
-  const newLine = spans[app.index].closest(".klaf-line");
+  const prevLine = spans[prevIndex].closest(".klaf-row");
+  const newLine = spans[app.index].closest(".klaf-row");
   if (prevLine && prevLine !== newLine) prevLine.classList.remove("current-line");
   if (newLine) newLine.classList.add("current-line");
 
@@ -259,6 +261,12 @@ function toggleVoice() {
 }
 
 // ---------- settings ----------
+
+function selectJustifyMode(mode) {
+  app.justifyMode = mode;
+  updateSettings({ justifyMode: mode });
+  render();
+}
 
 function toggleSubstituteSafek() {
   app.substituteSafek = !app.substituteSafek;
@@ -415,7 +423,7 @@ function render() {
         verified: app.text.verified,
         shemPending,
         hasLines: app.text.hasLines,
-        wordOpts: { substituteSafek: app.substituteSafek },
+        wordOpts: { substituteSafek: app.substituteSafek, justifyMode: app.justifyMode },
       })
     );
     if (lishmahPending()) {
@@ -475,6 +483,8 @@ function render() {
     );
   }
 
+  queueMicrotask(() => applyLetterJustify(root));
+
   if (app.menuOpen) {
     root.appendChild(
       renderDrawer({
@@ -489,6 +499,8 @@ function render() {
         voiceSensitivity: app.voiceSensitivity,
         substituteSafek: app.substituteSafek,
         onToggleSubstituteSafek: toggleSubstituteSafek,
+        justifyMode: app.justifyMode,
+        onSelectJustifyMode: selectJustifyMode,
         onSelectText: switchToText,
         onSelectFont: selectFont,
         onSelectFontScale: selectFontScale,
@@ -522,6 +534,13 @@ async function init() {
 
   // NOTE: voice deliberately does NOT start here - no mic permission prompt
   // at page load. It starts on lishmah confirm or the header toggle.
+
+  document.fonts.ready.then(() => applyLetterJustify());
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => applyLetterJustify(), 150);
+  });
 
   document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
