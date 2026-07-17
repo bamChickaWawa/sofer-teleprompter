@@ -1037,3 +1037,77 @@ body {
   padding: 0.2rem 0;
   cursor: pointer;
 }
+
+/* ---------- review selection / jump panel ---------- */
+
+.word.review-selected {
+  background: rgba(201, 162, 39, 0.35);
+  box-shadow: 0 0 0 0.15em rgba(201, 162, 39, 0.55);
+  border-radius: 2px;
+}
+
+.review-tikkun-wrap .word {
+  cursor: pointer;
+}
+
+.jump-detail {
+  font-family: var(--ui-font);
+  font-size: 0.85rem;
+  color: var(--fg);
+  direction: ltr;
+}
+
+.jump-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.jump-confirm {
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--ui-font);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.4rem;
+}
+
+.jump-cancel {
+  background: none;
+  border: 1px solid #3a3a3a;
+  color: #bbb;
+  font-family: var(--ui-font);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1rem;
+}
+
+/* ---------- bookmarks ---------- */
+
+.bookmark-save {
+  color: var(--accent) !important;
+}
+
+.bookmark-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.bookmark-jump {
+  flex: 1 1 auto;
+  font-size: 0.88rem !important;
+}
+
+.bookmark-del {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.3rem;
+}
+
+.bookmark-del:active {
+  color: #c96a6a;
+}

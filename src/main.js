@@ -19,7 +19,16 @@ import { createVoiceController, isSpeechRecognitionSupported } from "./voice.js"
 import { fetchHalachaText, renderHalachaPanel } from "./halacha.js";
 import { renderLetterCounter } from "./letter-counter.js";
 import { renderLanding } from "./landing.js";
-import { loadPosition, savePosition, loadLastTextId, loadSettings, saveSettings } from "./store.js";
+import {
+  loadPosition,
+  savePosition,
+  loadLastTextId,
+  loadSettings,
+  saveSettings,
+  loadBookmarks,
+  addBookmark,
+  removeBookmark,
+} from "./store.js";
 
 const State = Object.freeze({
   LANDING: "LANDING",
@@ -65,6 +74,7 @@ const app = {
   halachaEntryStates: {},
   counterOpen: false,
   reviewReturnState: null,
+  reviewSelectedIndex: null,
   layoutReturnState: null,
   layoutBreaks: new Set(),
 };
@@ -337,11 +347,60 @@ function toggleReviewMode() {
     app.state = app.reviewReturnState.state;
     app.index = app.reviewReturnState.index;
     app.reviewReturnState = null;
+    app.reviewSelectedIndex = null;
   } else if (app.state === State.READY || app.state === State.DONE) {
     app.reviewReturnState = { state: app.state, index: app.index };
+    app.reviewSelectedIndex = null;
     app.state = State.REVIEW;
   }
   app.menuOpen = false;
+  render();
+}
+
+function selectReviewWord(i) {
+  app.reviewSelectedIndex = i;
+  render();
+}
+
+// "start in the middle": deliberate two-step (tap word -> read location ->
+// confirm). Exits review into writing mode at the chosen word; the lishmah
+// gate for this kind still applies as usual.
+function confirmReviewPosition(i) {
+  app.index = i;
+  savePosition(app.textId, app.index);
+  app.reviewReturnState = null;
+  app.reviewSelectedIndex = null;
+  app.state = State.READY;
+  render();
+  scrollCurrentIntoView("auto");
+}
+
+function saveCurrentBookmark() {
+  const label = `${app.text?.heTitle ?? app.textId} · מילה ${app.index + 1}`;
+  addBookmark({ textId: app.textId, index: app.index, label, rtOrder: app.textId === "tefillin" ? app.rtOrder : null });
+  render();
+}
+
+async function jumpToBookmark(bm) {
+  if (bm.rtOrder && bm.rtOrder !== app.rtOrder) {
+    app.rtOrder = bm.rtOrder;
+    updateSettings({ rtOrder: bm.rtOrder });
+  }
+  if (bm.textId !== app.textId || app.state === State.LANDING) {
+    await switchToText(bm.textId);
+  }
+  if (bm.index < app.text.words.length) {
+    app.index = bm.index;
+    savePosition(app.textId, app.index);
+  }
+  app.menuOpen = false;
+  app.state = State.READY;
+  render();
+  scrollCurrentIntoView("auto");
+}
+
+function deleteBookmark(id) {
+  removeBookmark(id);
   render();
 }
 
@@ -485,7 +544,17 @@ function render() {
       })
     );
   } else if (app.state === State.REVIEW) {
-    root.appendChild(renderReview({ words: app.text.words, index: app.index, onExit: toggleReviewMode, wordOpts: { substituteSafek: app.substituteSafek } }));
+    root.appendChild(
+      renderReview({
+        words: app.text.words,
+        index: app.index,
+        selectedIndex: app.reviewSelectedIndex,
+        onSelectWord: selectReviewWord,
+        onConfirmPosition: confirmReviewPosition,
+        onExit: toggleReviewMode,
+        wordOpts: { substituteSafek: app.substituteSafek },
+      })
+    );
   } else if (app.state === State.LAYOUT_EDITOR) {
     root.appendChild(
       renderLayoutEditor({
@@ -544,6 +613,11 @@ function render() {
         layoutEditorActive: app.state === State.LAYOUT_EDITOR,
         onToggleLetterCounter: toggleLetterCounter,
         onGoHome: goHome,
+        bookmarks: loadBookmarks(),
+        canBookmark: app.state === State.READY || app.state === State.REVIEW,
+        onSaveBookmark: saveCurrentBookmark,
+        onJumpBookmark: jumpToBookmark,
+        onDeleteBookmark: deleteBookmark,
         onClose: toggleMenu,
       })
     );

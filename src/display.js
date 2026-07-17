@@ -321,14 +321,14 @@ export function renderControlBar({ words, index, locked, onBack, onAdvance }) {
   return bar;
 }
 
-export function renderReview({ words, index, onExit, wordOpts = {} }) {
+export function renderReview({ words, index, selectedIndex, onSelectWord, onConfirmPosition, onExit, wordOpts = {} }) {
   const wrap = document.createElement("div");
   wrap.className = "review-mode";
 
   const banner = document.createElement("div");
   banner.className = "review-banner";
   const bannerText = document.createElement("span");
-  bannerText.textContent = "REVIEW MODE — NOT FOR WRITING!";
+  bannerText.textContent = "REVIEW — tap a word to set the writing position";
   const exitBtn = document.createElement("button");
   exitBtn.textContent = "Back to writing";
   exitBtn.addEventListener("click", (e) => {
@@ -341,6 +341,7 @@ export function renderReview({ words, index, onExit, wordOpts = {} }) {
 
   const scroll = document.createElement("div");
   scroll.className = "tikkun-wrap review-tikkun-wrap";
+  if (selectedIndex != null) scroll.classList.add("with-shem-panel");
 
   const column = document.createElement("div");
   column.className = "tikkun-column review-column";
@@ -349,12 +350,56 @@ export function renderReview({ words, index, onExit, wordOpts = {} }) {
   text.className = "tikkun-text";
   words.forEach((word, i) => {
     const span = document.createElement("span");
-    span.className = `word ${i === index ? "review-position" : i < index ? "written" : "upcoming"}`;
+    span.className = `word ${i === index ? "review-position" : i < index ? "written" : "upcoming"}${
+      i === selectedIndex ? " review-selected" : ""
+    }`;
     span.textContent = shemDisplayText(word, wordOpts);
+    span.addEventListener("click", (e) => {
+      e.stopPropagation();
+      onSelectWord(i);
+    });
     text.appendChild(span);
     if (i < words.length - 1) text.appendChild(document.createTextNode(" "));
   });
   column.appendChild(text);
+
+  // selection confirm panel: setting a position is deliberate - tap, read
+  // the exact location back, then confirm
+  if (selectedIndex != null) {
+    const panel = document.createElement("div");
+    panel.className = "shem-panel jump-panel";
+
+    const label = document.createElement("div");
+    label.className = "gate-label";
+    label.textContent = "Set writing position here?";
+    panel.appendChild(label);
+
+    const detail = document.createElement("div");
+    detail.className = "jump-detail";
+    detail.textContent = `"${shemDisplayText(words[selectedIndex], wordOpts)}" — ${positionLabel(words, selectedIndex)}`;
+    panel.appendChild(detail);
+
+    const row = document.createElement("div");
+    row.className = "jump-actions";
+    const confirmBtn = document.createElement("button");
+    confirmBtn.className = "jump-confirm";
+    confirmBtn.textContent = "Start here";
+    confirmBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      onConfirmPosition(selectedIndex);
+    });
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = "jump-cancel";
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      onSelectWord(null);
+    });
+    row.appendChild(confirmBtn);
+    row.appendChild(cancelBtn);
+    panel.appendChild(row);
+    wrap.appendChild(panel);
+  }
   scroll.appendChild(column);
   wrap.appendChild(scroll);
 

@@ -47,6 +47,33 @@ export function loadLastTextId() {
   return localStorage.getItem(KEY_LAST_TEXT);
 }
 
+const KEY_BOOKMARKS = "sofer-teleprompter:bookmarks";
+
+// Named save points, on top of the automatic per-text position save - a
+// sofer working on several klafim of the same text tracks each one here.
+export function loadBookmarks() {
+  const raw = localStorage.getItem(KEY_BOOKMARKS);
+  if (!raw) return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+}
+
+export function addBookmark({ textId, index, label, rtOrder }) {
+  const list = loadBookmarks();
+  const bm = { id: Date.now(), textId, index, label, rtOrder: rtOrder ?? null, savedAt: new Date().toISOString() };
+  list.unshift(bm);
+  localStorage.setItem(KEY_BOOKMARKS, JSON.stringify(list.slice(0, 50)));
+  return bm;
+}
+
+export function removeBookmark(id) {
+  const list = loadBookmarks().filter((b) => b.id !== id);
+  localStorage.setItem(KEY_BOOKMARKS, JSON.stringify(list));
+}
+
 export function loadSettings() {
   const raw = localStorage.getItem(KEY_SETTINGS);
   if (!raw) return { ...DEFAULT_SETTINGS };

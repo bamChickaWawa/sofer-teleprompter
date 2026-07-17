@@ -48,6 +48,11 @@ export function renderDrawer({
   layoutEditorActive,
   onToggleLetterCounter,
   onGoHome,
+  bookmarks = [],
+  canBookmark = false,
+  onSaveBookmark,
+  onJumpBookmark,
+  onDeleteBookmark,
   onClose,
 }) {
   const overlay = document.createElement("div");
@@ -84,6 +89,42 @@ export function renderDrawer({
   counterBtn.textContent = "Letter counter";
   counterBtn.addEventListener("click", onToggleLetterCounter);
   drawer.appendChild(counterBtn);
+
+  const bmHeading = document.createElement("h2");
+  bmHeading.textContent = "Bookmarks — סימניות";
+  drawer.appendChild(bmHeading);
+
+  const bmNote = document.createElement("div");
+  bmNote.className = "nav-loading";
+  bmNote.textContent = "Position is saved automatically per text. Bookmarks are named save points for tracking several works.";
+  drawer.appendChild(bmNote);
+
+  if (canBookmark) {
+    const saveBtn = document.createElement("button");
+    saveBtn.className = "nav-item bookmark-save";
+    saveBtn.textContent = "+ Save current position";
+    saveBtn.addEventListener("click", onSaveBookmark);
+    drawer.appendChild(saveBtn);
+  }
+
+  for (const bm of bookmarks) {
+    const row = document.createElement("div");
+    row.className = "bookmark-row";
+    const jump = document.createElement("button");
+    jump.className = "nav-item bookmark-jump";
+    const when = new Date(bm.savedAt);
+    jump.textContent = `${bm.label} · ${when.toLocaleDateString()}`;
+    jump.addEventListener("click", () => onJumpBookmark(bm));
+    const del = document.createElement("button");
+    del.className = "bookmark-del";
+    del.textContent = "✕";
+    del.title = "Delete bookmark";
+    del.setAttribute("aria-label", "Delete bookmark");
+    del.addEventListener("click", () => onDeleteBookmark(bm.id));
+    row.appendChild(jump);
+    row.appendChild(del);
+    drawer.appendChild(row);
+  }
 
   const fontHeading = document.createElement("h2");
   fontHeading.textContent = "Font";
