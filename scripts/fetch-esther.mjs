@@ -18,12 +18,13 @@ let wordCount = 0;
 let specialCount = 0;
 chapters.forEach((chapterVerses, ci) => {
   chapterVerses.forEach((verseRaw, vi) => {
-    const { words, specials } = cleanVerse(verseRaw);
+    const { words, specials, breaks } = cleanVerse(verseRaw);
     if (!words.length) return;
     wordCount += words.length;
     specialCount += specials.length;
     const verse = { c: ci + 1, v: vi + 1, words };
     if (specials.length) verse.s = specials;
+        if (breaks.length) verse.br = breaks;
     verses.push(verse);
   });
 });

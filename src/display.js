@@ -149,7 +149,7 @@ export function applyLetterJustify(root = document) {
   const range = document.createRange();
   lines.forEach((el) => {
     el.style.letterSpacing = "0px";
-    if (el.classList.contains("line-unjustified")) return;
+    if (el.classList.contains("line-unjustified") || el.classList.contains("line-open")) return;
     range.selectNodeContents(el);
     const natural = range.getBoundingClientRect().width;
     const cs = getComputedStyle(el);
@@ -232,7 +232,8 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, la
       lineInAmud++;
       const rowEl = document.createElement("div");
       const isLast = li === lines.length - 1;
-      const afterParshia = li > 0 && lines[li - 1].endsParshia;
+      const prevLastWord = li > 0 ? words[lines[li - 1].end] : null;
+      const afterParshia = Boolean(prevLastWord && (prevLastWord.parshiaBreak || prevLastWord.leadGapNext));
       rowEl.className = `klaf-row${index >= line.start && index <= line.end ? " current-line" : ""}`;
 
       // letter count from the TRUE text (word.text), never the display
@@ -247,19 +248,37 @@ export function renderTikkun({ words, index, verified, shemPending, hasLines, la
       countBadge.title = `${letterCount} letters`;
       rowEl.appendChild(countBadge);
 
+      const endsOpen = Boolean(words[line.end].openLineEnd);
       const lineEl = document.createElement("div");
-      lineEl.className = `klaf-line${isLast ? " line-unjustified" : ""}`;
+      lineEl.className = `klaf-line${isLast ? " line-unjustified" : ""}${endsOpen ? " line-open" : ""}`;
 
       if (afterParshia) {
         const gap = document.createElement("span");
         gap.className = "setumah-gap";
         gap.setAttribute("aria-label", "setumah");
+        if (prevLastWord?.leadGapNext) gap.textContent = "ס";
         lineEl.appendChild(gap);
       }
 
       for (let i = line.start; i <= line.end; i++) {
         lineEl.appendChild(makeWordSpan(words[i], i, index, shemPending, wordOpts));
+        if (words[i].inlineGapAfter && i < line.end) {
+          // setuma: closed-parsha gap inside the line
+          const gap = document.createElement("span");
+          gap.className = "setumah-gap setumah-inline";
+          gap.setAttribute("aria-label", "setumah");
+          gap.textContent = "ס";
+          lineEl.appendChild(gap);
+        }
         if (i < line.end) lineEl.appendChild(document.createTextNode(" "));
+      }
+      if (endsOpen) {
+        // petucha: the rest of the line stays open; faint marker for the sofer
+        const pe = document.createElement("span");
+        pe.className = "petucha-marker";
+        pe.setAttribute("aria-label", "petucha");
+        pe.textContent = "פ";
+        lineEl.appendChild(pe);
       }
       rowEl.appendChild(lineEl);
 

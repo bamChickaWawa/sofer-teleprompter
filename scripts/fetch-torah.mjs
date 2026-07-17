@@ -73,11 +73,12 @@ for (const book of BOOKS) {
       const chapterNum = startChapter + ci;
       chapterVerses.forEach((verseRaw, vi) => {
         const verseNum = ci === 0 ? startVerse + vi : vi + 1;
-        const { words, specials } = cleanVerse(verseRaw);
+        const { words, specials, breaks } = cleanVerse(verseRaw);
         if (!words.length) return;
         wordCount += words.length;
         const verse = { c: chapterNum, v: verseNum, words };
         if (specials.length) verse.s = specials;
+        if (breaks.length) verse.br = breaks;
         verses.push(verse);
       });
     });

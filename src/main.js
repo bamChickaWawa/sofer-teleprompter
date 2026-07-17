@@ -65,6 +65,8 @@ const app = {
   rtOrder: settings.rtOrder ?? "rashi",
   substituteSafek: settings.substituteSafek ?? true,
   justifyMode: settings.justifyMode ?? "word",
+  lineHeight: settings.lineHeight ?? 1.9,
+  wordGap: settings.wordGap ?? 0.15,
   voiceEnabled: settings.voiceEnabled ?? true,
   voiceSensitivity: settings.voiceSensitivity ?? "normal",
   voiceStatus: isSpeechRecognitionSupported() ? "stopped" : "unsupported",
@@ -275,6 +277,20 @@ function toggleVoice() {
 }
 
 // ---------- settings ----------
+
+function selectLineHeight(v) {
+  app.lineHeight = v;
+  document.documentElement.style.setProperty("--klaf-line-height", v);
+  updateSettings({ lineHeight: v });
+  render();
+}
+
+function selectWordGap(v) {
+  app.wordGap = v;
+  document.documentElement.style.setProperty("--word-gap", v + "em");
+  updateSettings({ wordGap: v });
+  render();
+}
 
 function selectJustifyMode(mode) {
   app.justifyMode = mode;
@@ -602,6 +618,10 @@ function render() {
         onToggleSubstituteSafek: toggleSubstituteSafek,
         justifyMode: app.justifyMode,
         onSelectJustifyMode: selectJustifyMode,
+        lineHeight: app.lineHeight,
+        onSelectLineHeight: selectLineHeight,
+        wordGap: app.wordGap,
+        onSelectWordGap: selectWordGap,
         onSelectText: switchToText,
         onSelectFont: selectFont,
         onSelectFontScale: selectFontScale,
@@ -627,6 +647,8 @@ function render() {
 async function init() {
   document.documentElement.dataset.font = app.font;
   document.documentElement.style.setProperty("--font-scale", app.fontScale);
+  document.documentElement.style.setProperty("--klaf-line-height", app.lineHeight);
+  document.documentElement.style.setProperty("--word-gap", app.wordGap + "em");
   render();
 
   loadTorahManifest()

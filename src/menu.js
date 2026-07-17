@@ -37,6 +37,10 @@ export function renderDrawer({
   onToggleSubstituteSafek,
   justifyMode,
   onSelectJustifyMode,
+  lineHeight,
+  onSelectLineHeight,
+  wordGap,
+  onSelectWordGap,
   onSelectText,
   onSelectFont,
   onSelectFontScale,
@@ -170,6 +174,43 @@ export function renderDrawer({
     rtRow.appendChild(btn);
   }
   drawer.appendChild(rtRow);
+
+  const lhHeading = document.createElement("h2");
+  lhHeading.textContent = "Line spacing";
+  drawer.appendChild(lhHeading);
+  const lhRow = document.createElement("div");
+  lhRow.className = "font-choice-row";
+  for (const opt of [
+    { id: 1.7, label: "Tight" },
+    { id: 1.9, label: "Normal" },
+    { id: 2.2, label: "Loose" },
+    { id: 2.6, label: "Wide" },
+  ]) {
+    const btn = document.createElement("button");
+    btn.className = `font-choice${opt.id === lineHeight ? " active" : ""}`;
+    btn.textContent = opt.label;
+    btn.addEventListener("click", () => onSelectLineHeight(opt.id));
+    lhRow.appendChild(btn);
+  }
+  drawer.appendChild(lhRow);
+
+  const wgHeading = document.createElement("h2");
+  wgHeading.textContent = "Word spacing";
+  drawer.appendChild(wgHeading);
+  const wgRow = document.createElement("div");
+  wgRow.className = "font-choice-row";
+  for (const opt of [
+    { id: 0.05, label: "Tight" },
+    { id: 0.15, label: "Normal" },
+    { id: 0.35, label: "Wide" },
+  ]) {
+    const btn = document.createElement("button");
+    btn.className = `font-choice${opt.id === wordGap ? " active" : ""}`;
+    btn.textContent = opt.label;
+    btn.addEventListener("click", () => onSelectWordGap(opt.id));
+    wgRow.appendChild(btn);
+  }
+  drawer.appendChild(wgRow);
 
   const justifyHeading = document.createElement("h2");
   justifyHeading.textContent = "Line justification";

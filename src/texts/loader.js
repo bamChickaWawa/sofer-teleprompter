@@ -18,12 +18,17 @@ function adaptCompact(compact) {
         specialsByWord.get(wi).push({ index: ci, type: SPECIAL_TYPE[t] });
       }
     }
+    const breaksByWord = new Map();
+    if (verse.br) {
+      for (const [wi, t] of verse.br) breaksByWord.set(wi, t === "p" ? "petucha" : "setuma");
+    }
     verse.words.forEach((text, i) => {
       words.push({
         text,
         isShem: SHEM_RE.test(text),
         isSafekShem: SAFEK_RE.test(text),
         specialLetters: specialsByWord.get(i) ?? [],
+        parshaBreakAfter: breaksByWord.get(i) ?? null,
         tagin: [],
         lineBreakAfter: false,
         columnBreakAfter: false,
@@ -40,12 +45,15 @@ function adaptCompact(compact) {
 // Applies a generated draft layout: flat lineBreakAfter/columnBreakAfter
 // flags plus per-word amud/line numbers for the position readout.
 function applyGeneratedLayout(words, opts) {
-  const { lineEnds, colEnds, note } = generateLayout(words, opts);
+  const { lineEnds, colEnds, marks, note } = generateLayout(words, opts);
   let amud = 1;
   let line = 1;
   for (let i = 0; i < words.length; i++) {
     words[i].amud = amud;
     words[i].line = line;
+    if (marks?.openEnds.has(i)) words[i].openLineEnd = true; // petucha
+    if (marks?.inlineGaps.has(i)) words[i].inlineGapAfter = true; // setuma mid-line
+    if (marks?.leadGaps.has(i)) words[i].leadGapNext = true; // setuma at next line start
     if (lineEnds.has(i)) {
       words[i].lineBreakAfter = true;
       line++;

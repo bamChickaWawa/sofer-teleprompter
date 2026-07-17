@@ -428,10 +428,10 @@ body {
 .tikkun-text {
   font-family: var(--stam-font);
   font-size: calc(clamp(1.4rem, 6vw, 2.6rem) * var(--font-scale, 1));
-  line-height: 1.9;
+  line-height: var(--klaf-line-height, 1.9);
   text-align: justify;
   text-align-last: right;
-  word-spacing: 0.15em;
+  word-spacing: var(--word-gap, 0.15em);
 }
 
 /* ---------- fixed-line klaf mode ---------- */
@@ -442,8 +442,9 @@ body {
      The longest mezuzah line is ~45 chars incl. spaces, and the count/number
      badges take ~3rem of each row. */
   font-size: calc(clamp(0.8rem, 3vw, 1.22rem) * var(--font-scale, 1));
-  line-height: 1.9;
+  line-height: var(--klaf-line-height, 1.9);
   direction: rtl;
+  word-spacing: var(--word-gap, 0.15em);
 }
 
 /* each line is a row: [letter-count][text][line-number] (RTL: count on the
@@ -1110,4 +1111,34 @@ body {
 
 .bookmark-del:active {
   color: #c96a6a;
+}
+
+/* ---------- parsha breaks (petuchot/setumot) ---------- */
+
+.klaf-line.line-open {
+  text-align-last: right;
+}
+
+.setumah-gap,
+.petucha-marker {
+  color: rgba(138, 122, 84, 0.55);
+  font-family: var(--ui-font);
+  font-size: 0.55em;
+}
+
+.setumah-gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5em;
+  vertical-align: baseline;
+}
+
+.setumah-gap.setumah-inline {
+  width: 4.5em;
+}
+
+.petucha-marker {
+  display: inline-block;
+  margin-right: 1.2em;
 }
