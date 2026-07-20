@@ -1147,3 +1147,16 @@ body {
   line-height: 1.4;
   padding: 0.4rem 0.3rem 0.8rem;
 }
+
+.voice-heard {
+  flex: 1 1 100%;
+  font-family: var(--ui-font);
+  font-size: 0.68rem;
+  color: var(--accent);
+  direction: rtl;
+  text-align: right;
+  min-height: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

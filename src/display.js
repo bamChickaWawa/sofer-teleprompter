@@ -64,6 +64,17 @@ export function renderHeader({ heTitle, subtitle, onMenuToggle, voiceStatus, onT
 
   header.appendChild(titleEl);
   header.appendChild(controls);
+
+  // Live proof-of-listening: shows the raw (interim or final) transcript
+  // Chrome is actually hearing, so "is voice even working?" has a visible
+  // answer instead of being a black box. Updated directly by main.js
+  // without a full re-render on every partial speech result.
+  if (voiceStatus === "listening") {
+    const heard = document.createElement("div");
+    heard.className = "voice-heard";
+    header.appendChild(heard);
+  }
+
   return header;
 }
 

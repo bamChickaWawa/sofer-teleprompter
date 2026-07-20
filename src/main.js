@@ -255,6 +255,8 @@ function handleVoiceMatch() {
   }
 }
 
+let heardUpdateTimer = null;
+
 const voiceController = createVoiceController({
   getTarget: getVoiceTarget,
   getSensitivity: () => app.voiceSensitivity,
@@ -263,6 +265,18 @@ const voiceController = createVoiceController({
     if (status === app.voiceStatus) return;
     app.voiceStatus = status;
     render();
+  },
+  onHeard: (transcript) => {
+    // live proof-of-listening, not a full render on every partial result
+    app.lastHeard = transcript;
+    const el = document.querySelector(".voice-heard");
+    if (el) {
+      el.textContent = transcript ? `Heard: "${transcript}"` : "";
+      clearTimeout(heardUpdateTimer);
+      heardUpdateTimer = setTimeout(() => {
+        if (el.isConnected) el.textContent = "";
+      }, 4000);
+    }
   },
 });
 

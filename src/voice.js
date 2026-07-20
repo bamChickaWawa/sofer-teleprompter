@@ -64,28 +64,59 @@ const MAX_RETRY_MS = 4000;
 // getTarget(): () => { text, isShem } | null  -- null means "not listening for anything right now"
 // getSensitivity(): () => "loose" | "normal" | "strict"
 // onMatch(): called when the spoken word matches the current target
-export function createVoiceController({ getTarget, getSensitivity, onMatch, onStatusChange }) {
+export function createVoiceController({ getTarget, getSensitivity, onMatch, onStatusChange, onHeard }) {
   let current = null; // the recognition instance we currently consider "ours"
   let active = false; // user/app intent: should we be listening at all
   let restartTimer = null;
   let retryDelay = BASE_RETRY_MS;
 
+  // Per-result-index "consumed through" pointer: token positions before it
+  // are settled and never re-examined; the token AT the pointer is re-
+  // checked on every update, because Chrome keeps revising the most recent
+  // token in place as it refines its guess (a single utterance commonly
+  // arrives as "ש" -> "שמ" -> "שמע" across successive events, not as
+  // freshly appended tokens) - freezing it after the first miss would mean
+  // it's never given the chance to become a match once corrected.
+  let consumedThrough = new Map();
+
   function setStatus(status) {
     if (onStatusChange) onStatusChange(status);
   }
 
+  // Chrome's `isFinal` is not reliable for this use case: the sofer's actual
+  // pattern is one short word, a pause to write, the next word - and short
+  // isolated utterances are exactly where Chrome's silence-based endpointer
+  // is least consistent about ever finalizing at all. Waiting for isFinal
+  // can mean waiting forever while interim results (which DO arrive
+  // promptly) sit unused. So every result is scanned, interim or final;
+  // finalization only closes out the tracking for that slot.
   function handleResult(event) {
     for (let i = event.resultIndex; i < event.results.length; i++) {
       const result = event.results[i];
-      if (!result.isFinal) continue;
-      const target = getTarget();
-      if (!target) continue;
-      const tokens = result[0].transcript.trim().split(/\s+/).filter(Boolean);
+      const transcript = result[0].transcript.trim();
+      if (onHeard) onHeard(transcript);
+      if (!transcript) continue;
+
+      const tokens = transcript.split(/\s+/).filter(Boolean);
       const sensitivity = getSensitivity ? getSensitivity() : "normal";
-      const matched = tokens.some((tok) =>
-        target.isShem ? matchesKinui(tok) : fuzzyMatchesWord(tok, target.text, sensitivity)
-      );
-      if (matched) onMatch();
+      let pos = consumedThrough.get(i) ?? 0;
+
+      while (pos < tokens.length) {
+        const target = getTarget();
+        if (!target) break;
+        const isLastToken = pos === tokens.length - 1;
+        const isMatch = target.isShem ? matchesKinui(tokens[pos]) : fuzzyMatchesWord(tokens[pos], target.text, sensitivity);
+        if (isMatch) {
+          onMatch();
+          pos++;
+          continue; // target has advanced - a batched multi-word chunk may match again immediately
+        }
+        if (isLastToken) break; // still evolving - re-check this same position next update
+        pos++; // an earlier token with something newer after it is settled; skip it for good
+      }
+
+      consumedThrough.set(i, pos);
+      if (result.isFinal) consumedThrough.delete(i);
     }
   }
 
@@ -129,6 +160,7 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
       try {
         rec.start();
         retryDelay = BASE_RETRY_MS;
+        consumedThrough = new Map(); // a restarted session renumbers its results from 0
         setStatus("listening");
       } catch (err) {
         console.warn("[voice] restart failed, backing off:", err?.message ?? err);
@@ -145,6 +177,7 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
     if (!isSpeechRecognitionSupported() || active) return;
     active = true;
     retryDelay = BASE_RETRY_MS;
+    consumedThrough = new Map();
     const { rec, attemptStart } = spawn();
     current = rec;
     attemptStart();
@@ -153,6 +186,7 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
   function stop() {
     active = false;
     clearTimeout(restartTimer);
+    consumedThrough = new Map();
     if (current) {
       const rec = current;
       current = null; // any in-flight handler for `rec` now sees itself as stale
