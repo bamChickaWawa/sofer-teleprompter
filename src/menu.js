@@ -33,6 +33,7 @@ export function renderDrawer({
   fontScale,
   rtOrder,
   voiceSensitivity,
+  voiceSupported,
   substituteSafek,
   onToggleSubstituteSafek,
   justifyMode,
@@ -247,16 +248,24 @@ export function renderDrawer({
   sensitivityHeading.textContent = "Voice match sensitivity";
   drawer.appendChild(sensitivityHeading);
 
-  const sensitivityRow = document.createElement("div");
-  sensitivityRow.className = "font-choice-row";
-  for (const opt of SENSITIVITY_OPTIONS) {
-    const btn = document.createElement("button");
-    btn.className = `font-choice${opt.id === voiceSensitivity ? " active" : ""}`;
-    btn.textContent = opt.label;
-    btn.addEventListener("click", () => onSelectVoiceSensitivity(opt.id));
-    sensitivityRow.appendChild(btn);
+  if (!voiceSupported) {
+    const note = document.createElement("div");
+    note.className = "nav-loading voice-unsupported-note";
+    note.textContent =
+      "Voice advance isn't available in this browser (no speech recognition API - notably Firefox, and iOS Safari). Tap, the Next button, or spacebar always work as the halachically-fine fallback.";
+    drawer.appendChild(note);
+  } else {
+    const sensitivityRow = document.createElement("div");
+    sensitivityRow.className = "font-choice-row";
+    for (const opt of SENSITIVITY_OPTIONS) {
+      const btn = document.createElement("button");
+      btn.className = `font-choice${opt.id === voiceSensitivity ? " active" : ""}`;
+      btn.textContent = opt.label;
+      btn.addEventListener("click", () => onSelectVoiceSensitivity(opt.id));
+      sensitivityRow.appendChild(btn);
+    }
+    drawer.appendChild(sensitivityRow);
   }
-  drawer.appendChild(sensitivityRow);
 
   for (const group of manifest) {
     const heading = document.createElement("h2");

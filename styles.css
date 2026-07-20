@@ -1142,3 +1142,8 @@ body {
   display: inline-block;
   margin-right: 1.2em;
 }
+
+.voice-unsupported-note {
+  line-height: 1.4;
+  padding: 0.4rem 0.3rem 0.8rem;
+}

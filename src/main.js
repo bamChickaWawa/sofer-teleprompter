@@ -506,7 +506,16 @@ function render() {
       heTitle: app.state === State.LANDING ? "תיקון סופרים" : app.text?.heTitle ?? app.text?.title ?? "…",
       subtitle: app.state === State.LANDING ? "Sofer Teleprompter" : app.text?.title,
       onMenuToggle: toggleMenu,
-      voiceStatus: app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
+      // "unsupported" is a fixed browser-capability fact (checked once at
+      // load) and must always show through - it was previously masked to
+      // "stopped" by the voiceEnabled/voiceStarted toggle-display logic
+      // below, since voiceStarted is false before first use on EVERY
+      // browser, supported or not. That made the mic button look normal
+      // and tappable in browsers with no speech API at all (e.g. Firefox,
+      // which has never shipped SpeechRecognition), silently no-opping on
+      // tap with no explanation.
+      voiceStatus:
+        app.voiceStatus === "unsupported" ? "unsupported" : app.voiceEnabled && app.voiceStarted ? app.voiceStatus : "stopped",
       onToggleVoice: toggleVoice,
       onToggleHalacha: toggleHalacha,
     })
@@ -623,6 +632,7 @@ function render() {
         fontScale: app.fontScale,
         rtOrder: app.rtOrder,
         voiceSensitivity: app.voiceSensitivity,
+        voiceSupported: isSpeechRecognitionSupported(),
         substituteSafek: app.substituteSafek,
         onToggleSubstituteSafek: toggleSubstituteSafek,
         justifyMode: app.justifyMode,
