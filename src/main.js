@@ -235,15 +235,19 @@ function confirmShem() {
 
 // ---------- voice ----------
 
+function voiceBlocked() {
+  return app.state !== State.READY || app.menuOpen || app.halachaOpen || app.counterOpen || lishmahPending();
+}
+
 function getVoiceTarget() {
-  if (app.state !== State.READY || app.menuOpen || lishmahPending()) return null;
+  if (voiceBlocked()) return null;
   const word = app.text?.words[app.index];
   if (!word) return null;
   return { text: word.text, isShem: isCurrentWordShemPending() };
 }
 
 function handleVoiceMatch() {
-  if (app.state !== State.READY || app.menuOpen || lishmahPending()) return;
+  if (voiceBlocked()) return;
   if (isCurrentWordShemPending()) {
     confirmShem();
   } else {
@@ -264,7 +268,12 @@ const voiceController = createVoiceController({
 
 function toggleVoice() {
   if (!isSpeechRecognitionSupported()) return;
-  const nowOn = !(app.voiceStarted && app.voiceEnabled);
+  // "on" means actually running right now, not just the persisted
+  // preference - before the first start (mic permission not asked yet),
+  // voiceEnabled is already true, so treating that alone as "on" would make
+  // the very first tap look like turning it off instead of starting it.
+  const isRunning = app.voiceStarted && app.voiceEnabled;
+  const nowOn = !isRunning;
   app.voiceEnabled = nowOn;
   updateSettings({ voiceEnabled: nowOn });
   if (nowOn) {

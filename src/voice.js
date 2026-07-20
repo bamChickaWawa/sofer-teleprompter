@@ -58,13 +58,17 @@ export function isSpeechRecognitionSupported() {
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
 
+const BASE_RETRY_MS = 300;
+const MAX_RETRY_MS = 4000;
+
 // getTarget(): () => { text, isShem } | null  -- null means "not listening for anything right now"
 // getSensitivity(): () => "loose" | "normal" | "strict"
 // onMatch(): called when the spoken word matches the current target
 export function createVoiceController({ getTarget, getSensitivity, onMatch, onStatusChange }) {
-  let recognition = null;
-  let active = false;
+  let current = null; // the recognition instance we currently consider "ours"
+  let active = false; // user/app intent: should we be listening at all
   let restartTimer = null;
+  let retryDelay = BASE_RETRY_MS;
 
   function setStatus(status) {
     if (onStatusChange) onStatusChange(status);
@@ -85,19 +89,27 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
     }
   }
 
-  function start() {
-    if (!isSpeechRecognitionSupported() || active) return;
+  // Chrome ends a "continuous" recognition session on its own every so
+  // often (after silence, or a rolling ~60s cap) regardless of the
+  // continuous flag - that is expected, not an error, and this loop exists
+  // specifically to transparently restart it. Each instance's handlers close
+  // over THAT instance (never the shared `current`), and only act while it
+  // is still the instance we consider current - so a stale instance whose
+  // onend fires late (e.g. right after a toggle-driven restart) can never
+  // clobber a newer, already-running one. A failed start() is retried with
+  // capped backoff instead of being silently dropped.
+  function spawn() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = "he-IL";
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.onresult = handleResult;
-    recognition.onerror = (e) => {
+    const rec = new SpeechRecognition();
+    rec.lang = "he-IL";
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.onresult = handleResult;
+
+    rec.onerror = (e) => {
+      if (current !== rec) return;
       console.warn("[voice] recognition error:", e.error);
       if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-        // Permission denied: stop for good instead of hammering restart -
-        // onend fires after this and must not re-arm the recognizer.
         active = false;
         clearTimeout(restartTimer);
         setStatus("denied");
@@ -105,32 +117,51 @@ export function createVoiceController({ getTarget, getSensitivity, onMatch, onSt
       }
       setStatus(e.error === "no-speech" ? "listening" : "error");
     };
-    recognition.onend = () => {
-      if (!active) return;
-      restartTimer = setTimeout(() => {
-        try {
-          recognition.start();
-        } catch {
-          /* already running / transient - next onend will retry */
-        }
-      }, 300);
+
+    rec.onend = () => {
+      if (current !== rec || !active) return;
+      clearTimeout(restartTimer);
+      restartTimer = setTimeout(attemptStart, retryDelay);
     };
-    try {
-      recognition.start();
-      active = true;
-      setStatus("listening");
-    } catch (err) {
-      console.warn("[voice] failed to start recognition:", err);
-      setStatus("error");
+
+    function attemptStart() {
+      if (current !== rec || !active) return;
+      try {
+        rec.start();
+        retryDelay = BASE_RETRY_MS;
+        setStatus("listening");
+      } catch (err) {
+        console.warn("[voice] restart failed, backing off:", err?.message ?? err);
+        retryDelay = Math.min(retryDelay * 2, MAX_RETRY_MS);
+        clearTimeout(restartTimer);
+        restartTimer = setTimeout(attemptStart, retryDelay);
+      }
     }
+
+    return { rec, attemptStart };
+  }
+
+  function start() {
+    if (!isSpeechRecognitionSupported() || active) return;
+    active = true;
+    retryDelay = BASE_RETRY_MS;
+    const { rec, attemptStart } = spawn();
+    current = rec;
+    attemptStart();
   }
 
   function stop() {
     active = false;
     clearTimeout(restartTimer);
-    if (recognition) {
-      recognition.onend = null;
-      recognition.stop();
+    if (current) {
+      const rec = current;
+      current = null; // any in-flight handler for `rec` now sees itself as stale
+      rec.onend = null;
+      try {
+        rec.stop();
+      } catch {
+        /* already stopped */
+      }
     }
     setStatus("stopped");
   }
